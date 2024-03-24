@@ -25,7 +25,8 @@ defmodule Dotorchan.MixProject do
       {:mongodb, "~> 0.5.1"},
       {:poolboy, "~> 1.5.2"},
       {:plug_cowboy, "~> 2.0"},
-      {:jason, "~> 1.2.0"}
+      {:jason, "~> 1.2.0"},
+      {:remote_ip, "~> 1.1"}
     ]
   end
 end
