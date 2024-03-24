@@ -1,3 +1,3 @@
 import Config
 
-config :dotorchan, cowboy_port: 8080
+config :dotorchan, cowboy_port: (System.get_env("PORT") || "8080") |> String.to_integer()
