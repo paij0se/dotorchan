@@ -4,12 +4,15 @@ defmodule Dotorchan.Application do
 
   def start(_type, _args) do
     children = [
-      {Plug.Cowboy, scheme: :http, plug: Dotorchan.Router, options: [port: 4000]}
+      {Plug.Cowboy, scheme: :http, plug: Dotorchan.Router, options: [port: cowboy_port()]}
     ]
+
     opts = [strategy: :one_for_one, name: Dotorchan.Supervisor]
 
-    Logger.info("http://localhost:4000/")
+    Logger.info("http://localhost:#{cowboy_port()}")
 
     Supervisor.start_link(children, opts)
   end
+
+  defp cowboy_port, do: Application.get_env(:example, :cowboy_port, 8080)
 end
