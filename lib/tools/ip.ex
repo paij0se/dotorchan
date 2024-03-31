@@ -1,12 +1,20 @@
 defmodule Tools.Ip do
-  import Plug.Conn
+  @spec get(Plug.Conn.t()) :: binary()
+  def get(conn) do
+    forwarded_for =
+      conn
+      |> Plug.Conn.get_req_header("x-forwarded-for")
+      |> List.first()
 
-  def get_remote_ip(conn) do
-    forwarded_for_header = get_req_header(conn, "x-forwarded-for")
-
-    case forwarded_for_header do
-      [ip | _] -> ip
-      _ -> conn.remote_ip
+    if forwarded_for do
+      forwarded_for
+      |> String.split(",")
+      |> Enum.map(&String.trim/1)
+      |> List.first()
+    else
+      conn.remote_ip
+      |> :inet_parse.ntoa()
+      |> to_string()
     end
   end
 end
