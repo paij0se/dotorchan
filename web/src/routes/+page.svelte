@@ -1,51 +1,102 @@
 <script lang="ts">
-  const url = "http://localhost:8080/api/v1/g";
+  import { getPosts } from "../functions/getposts";
   import { browser } from "$app/environment";
-  interface Post {
-    anon_id: string;
-    content: string;
-    created_at: string;
-    id: number;
-  }
-  function dateConverter(date: string) {
-    const d = new Date(date);
-    return d.toLocaleString("en-US", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    });
-  }
-  function escapeHtml(unsafe: string) {
-    return unsafe
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-  }
-  fetch(url)
-    .then((res) => res.json())
-    .then((data) => {
-      if (browser) {
-        for (let i = 0; i < data.length; i++) {
-          var objs: Post = data[i];
-          document.getElementById("output")!.innerHTML +=
-            `<p>${escapeHtml(objs.content)}<p>` +
-            `<details>` +
-            `<summary>More</summary>` +
-            `<b><p>@${objs.anon_id}</p></b>` +
-            `<p>${dateConverter(objs.created_at)}</p>` +
-            `<p>${objs.id}</p>` +
-            `</details>`+
-            `<hr>`;
+  getPosts();
+  const url = "http://192.168.1.6:8080/api/v1/g";
+  let fileInput: any;
+  let files: any;
+  let avatar: any;
+  let fileS3: any;
+
+  function getBase64(image: Blob) {
+    const reader = new FileReader();
+    reader.readAsDataURL(image);
+    reader.onload = (e) => {
+      if (e.target) {
+        avatar = e.target.result;
+        if (e.target && typeof e.target.result === "string") {
+          uploadFunction(e.target.result);
         }
       }
+    };
+  }
+  async function uploadFunction(imgBase64: string) {
+    const data: { image?: string } = {};
+    const imgData = imgBase64.split(",");
+    data["image"] = imgData[1];
+    if (imgData[1].length > 20 * 1024 * 1024) {
+      alert("file is too large");
+      return;
+    }
+    // TODO: Upload file to S3
+    const apiS3 = "http://localhost:5000";
+    const res = await fetch(apiS3, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: files[0].name,
+        data: data["image"],
+      }),
     });
+    const s3Url = await res.json();
+    fileS3 = s3Url
+    if (browser) {
+      document.getElementById("fileName")!.innerText = files[0].name;
+    }
+  }
+  async function post() {
+    const content = document.querySelector("textarea")!.value;
+    if (content.trim() === "") {
+      alert("Content can't be empty");
+      return;
+    }
+    console.log(content.length);
+    if (content.length > 8000 || content.length < 1) {
+      alert("Content is too long or too short");
+      return;
+    }
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        content: document.querySelector("textarea")!.value,
+        file: fileS3,
+      }),
+    });
+    console.log(await res.json());
+    location.reload();
+  }
 </script>
 
+<svelte:head>
+  <style>
+    @import url("https://fonts.cdnfonts.com/css/gg-sans-2");
+  </style>
+</svelte:head>
+<h1>Post something</h1>
+<textarea name="" id="" placeholder="Post to /g/"></textarea>
+<div class="container">
+  <input
+    class="hidden"
+    id="file-to-upload"
+    type="file"
+    accept=".png,.jpg,.gif,.webp,.mp4"
+    bind:files
+    bind:this={fileInput}
+    on:change={() => getBase64(files[0])}
+  />
+  <button class="upload-btn" on:click={() => fileInput.click()}
+    >Upload file</button
+  >
+</div>
+<div id="fileName"></div>
+<br />
+<button class="upload-btn" on:click={async () => await post()}>post</button>
+<h1>Posts</h1>
 <div id="output"></div>
 
 <style>
@@ -55,9 +106,33 @@
     transition: background-color 0.3s;
   }
   #output {
-    margin: 0 auto;
     width: 80%;
     max-width: 800px;
-    font-size: 1.5rem;
+    font-size: 20;
+    font-family: "gg sans Normal";
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .upload-btn {
+    width: 128px;
+    height: 32px;
+    background-color: black;
+    font-family: sans-serif;
+    color: white;
+    font-weight: bold;
+    border: none;
+  }
+
+  .upload-btn:hover {
+    background-color: white;
+    color: black;
+    outline: black solid 2px;
   }
 </style>

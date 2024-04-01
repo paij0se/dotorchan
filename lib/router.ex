@@ -25,6 +25,7 @@ defmodule Dotorchan.Router do
     Routes.Boards.G.get_publications(conn, "g")
   end
 
+
   match _ do
     send_resp(conn, 404, "Oops!")
   end

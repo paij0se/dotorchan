@@ -4,32 +4,79 @@ defmodule Routes.Boards.G do
   def post(conn, board) do
     content =
       case conn.body_params do
-        %{"content" => a_content} -> a_content
-        _ -> ""
+        %{"content" => a_content} ->
+          a_content
+
+        _ ->
+          ""
       end
 
-    id = :rand.uniform(100_000_000)
-    anon_id = Tools.Ip.get(conn) |> Tools.Encrypt.e()
-    Map.get(conn.body_params, "content") |> IO.inspect(label: "content")
+    file =
+      case conn.body_params do
+        %{"file" => a_file} ->
+          a_file
 
-    response = %{
-      "id" => id,
-      "content" => content,
-      "anon_id" => anon_id,
-      "created_at" => DateTime.utc_now() |> DateTime.to_iso8601()
-    }
+        _ ->
+          ""
+      end
 
-    c = Db.Connect.connect()
-    Mongo.insert_one(c, board, response) |> IO.inspect(label: "insert")
-    send_resp(conn |> put_resp_content_type("application/json"), 200, Jason.encode!(response))
+    case content do
+      "" ->
+        send_resp(
+          conn |> put_resp_content_type("application/json"),
+          400,
+          Jason.encode!(%{"error" => "content is required"})
+        )
 
-    # curl -X POST -H "Content-Type: application/json" -d '{"content": "dotorchan"}' http://localhost:8080/api/v1/g
+      _ ->
+        id = :rand.uniform(100_000_000)
+        Map.get(conn.body_params, "content") |> IO.inspect(label: "content")
+
+        if file do
+          IO.inspect(file, label: "file")
+
+          response = %{
+            "id" => id,
+            "content" => content,
+            "ip" => Tools.Ip.get(conn),
+            "created_at" => DateTime.utc_now() |> DateTime.to_iso8601(),
+            "file" => %{
+              "url" => file,
+            }
+          }
+
+          c = Db.Connect.connect()
+          Mongo.insert_one(c, board, response) |> IO.inspect(label: "insert")
+
+          send_resp(
+            conn |> put_resp_content_type("application/json"),
+            200,
+            Jason.encode!(response)
+          )
+        else
+          response = %{
+            "id" => id,
+            "content" => content,
+            "ip" => Tools.Ip.get(conn),
+            "created_at" => DateTime.utc_now() |> DateTime.to_iso8601(),
+            "file" => file
+          }
+
+          c = Db.Connect.connect()
+          Mongo.insert_one(c, board, response) |> IO.inspect(label: "insert")
+
+          send_resp(
+            conn |> put_resp_content_type("application/json"),
+            200,
+            Jason.encode!(response)
+          )
+        end
+    end
   end
 
   def get_publications(conn, board) do
     c = Db.Connect.connect()
 
-    # show latest to oldest
     response =
       Mongo.aggregate(c, board, [
         %{
@@ -39,7 +86,8 @@ defmodule Routes.Boards.G do
         },
         %{
           "$project" => %{
-            "_id" => 0
+            "_id" => 0,
+            "ip" => 0
           }
         }
       ])
