@@ -45,8 +45,13 @@ defmodule Dotorchan.Router do
   end
 
   #############################################################
+  # TODO: Implementar
   get "/api/v1/stats" do
     Routes.Stats.get_stats(conn)
+  end
+
+  delete "/admin/delete" do
+    Routes.Admin.delete(conn)
   end
 
   match _ do

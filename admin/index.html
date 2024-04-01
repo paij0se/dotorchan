@@ -8,10 +8,41 @@
   <body>
     <h1>Admin Dashboard</h1>
     <h2>Delete posts:</h2>
-    <form action="ban.js" method="post">
-      <label for="username">id:</label>
-      <input type="text" name="username" id="username" />
+    <form id="deleteForm" method="post">
+      <label for="id">id:</label>
+      <input type="text" id="message_id" required />
+      <label for="id">board:</label>
+      <input type="text" id="board" required />
+
       <button type="submit">delete</button>
+      <div id="result"></div>
     </form>
+
+    <script>
+      const deleteForm = document.getElementById("deleteForm");
+      deleteForm.addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent the form from submitting normally
+        const id = document.getElementById("message_id").value;
+        const board = document.getElementById("board").value;
+        // id only can be a number
+        if (isNaN(id)) {
+          alert("id must be a number");
+          return;
+        }
+        const url = location.origin + "/admin/delete";
+        fetch(url, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id: id, board: board }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Success:", data);
+            document.getElementById("result").innerText = data.status;
+          });
+      });
+    </script>
   </body>
 </html>

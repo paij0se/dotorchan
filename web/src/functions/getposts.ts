@@ -48,6 +48,7 @@ function getPosts(board: string) {
             const size = objs.file.size; // Bytes
             switch (fileType) {
               case "mp4":
+                // If the file is larger than 10MB, display a link to download it
                 if (size > 10485760) {
                   document.getElementById(
                     "output"
