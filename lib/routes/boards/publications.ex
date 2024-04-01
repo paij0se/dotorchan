@@ -20,6 +20,8 @@ defmodule Routes.Boards.G do
           ""
       end
 
+
+
     case content do
       "" ->
         send_resp(
@@ -34,46 +36,25 @@ defmodule Routes.Boards.G do
         user_id = :rand.uniform(100_000_000)
         Map.get(conn.body_params, "content") |> IO.inspect(label: "content")
 
-        if file do
-          IO.inspect(file, label: "file")
+        IO.inspect(file, label: "file")
 
-          response = %{
-            "message_id" => id,
-            "user_id" => user_id,
-            "content" => content,
-            "ip" => Tools.Ip.get(conn),
-            "created_at" => DateTime.utc_now() |> DateTime.to_iso8601(),
-            "file" => %{
-              "url" => file
-            }
-          }
+        response = %{
+          "message_id" => id,
+          "user_id" => user_id,
+          "content" => content,
+          "ip" => Tools.Ip.get(conn),
+          "created_at" => DateTime.utc_now() |> DateTime.to_iso8601(),
+          "file" => file,
+        }
 
-          c = Db.Connect.connect()
-          Mongo.insert_one(c, board, response) |> IO.inspect(label: "insert")
+        c = Db.Connect.connect()
+        Mongo.insert_one(c, board, response) |> IO.inspect(label: "insert")
 
-          send_resp(
-            conn |> put_resp_content_type("application/json"),
-            200,
-            Jason.encode!(response)
-          )
-        else
-          response = %{
-            "message_id" => id,
-            "user_id" => user_id,
-            "content" => content,
-            "ip" => Tools.Ip.get(conn),
-            "created_at" => DateTime.utc_now() |> DateTime.to_iso8601()
-          }
-
-          c = Db.Connect.connect()
-          Mongo.insert_one(c, board, response) |> IO.inspect(label: "insert")
-
-          send_resp(
-            conn |> put_resp_content_type("application/json"),
-            200,
-            Jason.encode!(response)
-          )
-        end
+        send_resp(
+          conn |> put_resp_content_type("application/json"),
+          200,
+          Jason.encode!(response)
+        )
     end
   end
 

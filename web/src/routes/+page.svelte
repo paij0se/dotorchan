@@ -23,8 +23,8 @@
     const data: { image?: string } = {};
     const imgData = imgBase64.split(",");
     data["image"] = imgData[1];
-    if (imgData[1].length > 20 * 1024 * 1024) {
-      alert("file is too large, max size is 20mb");
+    if (imgData[1].length > 419430400) {
+      alert("file is too large, max size is 400mb");
       return;
     }
     // TODO: Upload file to S3
@@ -51,12 +51,12 @@
       alert("Content can't be empty");
       return;
     }
-    console.log(content.length);
     if (content.length > 8000 || content.length < 1) {
       alert("Content is too long or too short");
       return;
     }
     if (browser) {
+      // TODO: Unique ID with cookie
       console.log(document.cookie);
       const res = await fetch(url, {
         method: "POST",
@@ -68,7 +68,6 @@
           file: fileS3,
         }),
       });
-      console.log(await res.json());
       location.reload();
     }
   }
