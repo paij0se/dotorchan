@@ -7,7 +7,6 @@
   let files: any;
   let avatar: any;
   let fileS3: any;
-
   function getBase64(image: Blob) {
     const reader = new FileReader();
     reader.readAsDataURL(image);
@@ -25,7 +24,7 @@
     const imgData = imgBase64.split(",");
     data["image"] = imgData[1];
     if (imgData[1].length > 20 * 1024 * 1024) {
-      alert("file is too large");
+      alert("file is too large, max size is 20mb");
       return;
     }
     // TODO: Upload file to S3
@@ -41,7 +40,7 @@
       }),
     });
     const s3Url = await res.json();
-    fileS3 = s3Url
+    fileS3 = s3Url;
     if (browser) {
       document.getElementById("fileName")!.innerText = files[0].name;
     }
@@ -57,18 +56,21 @@
       alert("Content is too long or too short");
       return;
     }
-    const res = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        content: document.querySelector("textarea")!.value,
-        file: fileS3,
-      }),
-    });
-    console.log(await res.json());
-    location.reload();
+    if (browser) {
+      console.log(document.cookie);
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: document.querySelector("textarea")!.value,
+          file: fileS3,
+        }),
+      });
+      console.log(await res.json());
+      location.reload();
+    }
   }
 </script>
 
@@ -84,7 +86,6 @@
     class="hidden"
     id="file-to-upload"
     type="file"
-    accept=".png,.jpg,.gif,.webp,.mp4"
     bind:files
     bind:this={fileInput}
     on:change={() => getBase64(files[0])}
@@ -98,6 +99,7 @@
 <button class="upload-btn" on:click={async () => await post()}>post</button>
 <h1>Posts</h1>
 <div id="output"></div>
+<div id="codeblock"></div>
 
 <style>
   :global(body) {

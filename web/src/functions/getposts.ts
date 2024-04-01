@@ -1,7 +1,8 @@
 import { browser } from "$app/environment";
 const url = "http://192.168.1.6:8080/api/v1/g";
 interface Post {
-  anon_id: string;
+  message_id: string;
+  user_id: string;
   content: string;
   created_at: string;
   id: number;
@@ -46,10 +47,30 @@ function getPosts() {
                   `Your browser does not support the video tag.` +
                   `</video>`;
                 break;
+              case "png":
+                document.getElementById(
+                  "output"
+                )!.innerHTML += `<img src="${objs.file.url}" width=600 height=400 alt="image">`;
+                break;
+              case "webp":
+                document.getElementById(
+                  "output"
+                )!.innerHTML += `<img src="${objs.file.url}" width=600 height=400 alt="image">`;
+                break;
+              case "jpg":
+                document.getElementById(
+                  "output"
+                )!.innerHTML += `<img src="${objs.file.url}" width=600 height=400 alt="image">`;
+                break;
+              case "gif":
+                document.getElementById(
+                  "output"
+                )!.innerHTML += `<img src="${objs.file.url}" width=600 height=400 alt="image">`;
+                break;
               default:
                 document.getElementById(
                   "output"
-                )!.innerHTML += `<img src="${objs.file.url}" alt="image" width="400" height="400">`;
+                )!.innerHTML += `<a href="${objs.file.url}">Download ${fileType}</a>`;
                 break;
             }
           }
@@ -57,9 +78,9 @@ function getPosts() {
             `<p>${escapeHtml(objs.content)}<p>` +
             `<details>` +
             `<summary>More</summary>` +
-            `<b><p>@${objs.anon_id}</p></b>` +
+            `<b><p>@${objs.user_id}</p></b>` +
             `<p>${dateConverter(objs.created_at)}</p>` +
-            `<p>${objs.id}</p>` +
+            `<p>${objs.message_id}</p>` +
             `</details>` +
             `<hr>`;
         }

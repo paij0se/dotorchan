@@ -30,18 +30,21 @@ defmodule Routes.Boards.G do
 
       _ ->
         id = :rand.uniform(100_000_000)
+        # TODO: user_id unique to the user
+        user_id = :rand.uniform(100_000_000)
         Map.get(conn.body_params, "content") |> IO.inspect(label: "content")
 
         if file do
           IO.inspect(file, label: "file")
 
           response = %{
-            "id" => id,
+            "message_id" => id,
+            "user_id" => user_id,
             "content" => content,
             "ip" => Tools.Ip.get(conn),
             "created_at" => DateTime.utc_now() |> DateTime.to_iso8601(),
             "file" => %{
-              "url" => file,
+              "url" => file
             }
           }
 
@@ -55,11 +58,11 @@ defmodule Routes.Boards.G do
           )
         else
           response = %{
-            "id" => id,
+            "message_id" => id,
+            "user_id" => user_id,
             "content" => content,
             "ip" => Tools.Ip.get(conn),
-            "created_at" => DateTime.utc_now() |> DateTime.to_iso8601(),
-            "file" => file
+            "created_at" => DateTime.utc_now() |> DateTime.to_iso8601()
           }
 
           c = Db.Connect.connect()

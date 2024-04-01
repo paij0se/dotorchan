@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"math/rand"
 	"net/http"
 	"os"
 
@@ -65,7 +66,7 @@ func UploadtoS3(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	key := IncomingFile.Name
+	key := fmt.Sprint(rand.Intn(10000000)) + IncomingFile.Name
 
 	// Read the contents of the file into a buffer
 	var buf bytes.Buffer
@@ -88,6 +89,7 @@ func UploadtoS3(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("File uploaded successfully!!!")
 	// send the s3 link to the client
 	s3Url := "https://" + bucket + ".s3.amazonaws.com/" + key
+	fmt.Println(s3Url)
 	json.NewEncoder(w).Encode(s3Url)
 	// delete the file from the disk
 	err = os.Remove(IncomingFile.Name)
