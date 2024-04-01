@@ -17,6 +17,7 @@ defmodule Dotorchan.Router do
     Routes.Admin.admin_auth(conn)
   end
 
+  #####################################################
   post "/api/v1/g" do
     Routes.Boards.G.post(conn, "g")
   end
@@ -25,6 +26,28 @@ defmodule Dotorchan.Router do
     Routes.Boards.G.get_publications(conn, "g")
   end
 
+  #####################################################
+  post "/api/v1/pol" do
+    Routes.Boards.G.post(conn, "pol")
+  end
+
+  get "/api/v1/pol" do
+    Routes.Boards.G.get_publications(conn, "pol")
+  end
+
+  #########################################################
+  post "/api/v1/qst" do
+    Routes.Boards.G.post(conn, "qst")
+  end
+
+  get "/api/v1/qst" do
+    Routes.Boards.G.get_publications(conn, "qst")
+  end
+
+  #############################################################
+  get "/api/v1/stats" do
+    Routes.Stats.get_stats(conn)
+  end
 
   match _ do
     send_resp(conn, 404, "Oops!")

@@ -1,5 +1,5 @@
 import { browser } from "$app/environment";
-const url = "http://192.168.1.6:8080/api/v1/g";
+const url = "http://192.168.1.6:8080/api/v1/";
 interface Post {
   message_id: string;
   user_id: string;
@@ -32,13 +32,16 @@ function escapeHtml(unsafe: string) {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
 }
-function getPosts() {
-  fetch(url)
+function getPosts(board: string) {
+  fetch(`${url}${board}`)
     .then((res) => res.json())
     .then((data) => {
       if (browser) {
         for (let i = 0; i < data.length; i++) {
           var objs: Post = data[i];
+
+          document.getElementById("output")!.innerHTML +=
+            `<hr>` + `<p>${escapeHtml(objs.content)}<p>`;
           // If the post has a file, display it
           if (objs.file.url) {
             const fileType = objs.file.filename.split(".").pop();
@@ -75,6 +78,11 @@ function getPosts() {
                   "output"
                 )!.innerHTML += `<img src="${objs.file.url}" width=600 height=400 alt="image">`;
                 break;
+              case "jpeg":
+                document.getElementById(
+                  "output"
+                )!.innerHTML += `<img src="${objs.file.url}" width=600 height=400 alt="image">`;
+                break;
               case "gif":
                 document.getElementById(
                   "output"
@@ -87,6 +95,11 @@ function getPosts() {
                   `Your browser does not support the audio tag.` +
                   `</audio>`;
                 break;
+              /*
+              case "py":
+                // TODO: Add a code block
+                break;
+                */
               default:
                 document.getElementById(
                   "output"
@@ -108,16 +121,13 @@ function getPosts() {
                 break;
             }
           }
-
           document.getElementById("output")!.innerHTML +=
-            `<p>${escapeHtml(objs.content)}<p>` +
             `<details>` +
             `<summary>More</summary>` +
             `<b><p>@${objs.user_id}</p></b>` +
             `<p>${dateConverter(objs.created_at)}</p>` +
             `<p>${objs.message_id}</p>` +
-            `</details>` +
-            `<hr>`;
+            `</details>`;
         }
       }
     });
