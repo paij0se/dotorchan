@@ -110,7 +110,7 @@ func main() {
 	if !ok {
 		port = "5000"
 	}
-	fmt.Printf("Api on port: %s", port)
+	fmt.Println("Go microservice running on port: ", port)
 	handler := cors.Default().Handler(r)
 	http.ListenAndServe(":"+port, handler)
 

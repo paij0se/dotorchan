@@ -1,0 +1,38 @@
+version: '3.9'
+services:
+  app:
+    container_name: dotorchan
+    image: 'dotorchan:0.1.0'
+    restart: always
+    build: .
+    ports:
+      - '8080:8080'
+    depends_on:
+      - mongodb
+  go_microservice:
+    container_name: go_microservice
+    build: ./web/aws
+    restart: always
+    ports:
+      - '5000:5000'
+    depends_on:
+      - app
+  web:
+    container_name: dotorchan_web
+    image: 'dotorchan_web:0.1.0'
+    build: ./web
+    ports:
+      - '4173:4173'
+    depends_on:
+      - app
+  mongodb:
+    container_name: dotorchan_mongo
+    image: 'mongo:5.0.26'
+    volumes:
+      - 'mongo:/data/db:delegated'
+    ports:
+      - '27018:27017'
+    logging:
+      driver: none
+volumes:
+  mongo: null
