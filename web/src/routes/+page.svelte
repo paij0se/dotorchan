@@ -1,4 +1,16 @@
 <script lang="ts">
+  const url = "http://192.168.1.6:8080/api/v1/stats";
+  fetch(url)
+    .then((res) => res.json())
+    .then((data) => {
+      const stats = document.getElementById("stats");
+      if (stats) {
+        stats.innerHTML = `
+          <b>Total posts: ${data}</b>
+        `;
+      }
+    })
+    .catch((err) => console.error(err));
 </script>
 
 <svelte:head>
@@ -16,7 +28,8 @@
   <a href="/boards/pol">/pol/</a>
   <a href="/boards/qst">/qst/</a>
 </div>
-<b>Total posts:</b>
+<div id="stats"></div>
+
 <style>
   :global(body) {
     background-color: #313338;
@@ -37,6 +50,9 @@
     font-size: 30px;
   }
   h1 {
-    color : #c20505;
+    color: #c20505;
+  }
+  #stats {
+    margin-top: 20px;
   }
 </style>

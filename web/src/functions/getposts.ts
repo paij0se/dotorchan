@@ -41,7 +41,10 @@ function getPosts(board: string) {
           var objs: Post = data[i];
 
           document.getElementById("output")!.innerHTML +=
-            `<hr>` + `<p>${escapeHtml(objs.content)}<p>`;
+            `<style>hr { border-color: #717780; }</style>` +
+            `<hr>` +
+            `<p>${escapeHtml(objs.content)}<p>`;
+
           // If the post has a file, display it
           if (objs.file.url) {
             const fileType = objs.file.filename.split(".").pop();
