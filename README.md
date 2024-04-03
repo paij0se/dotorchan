@@ -14,7 +14,7 @@
 docker-compose up
 ```
 
-<b>Dont forget to add your aws credentials in the dockerfile of `web/aws/Dockerfile`</br>
+Dont forget to add your aws credentials in the dockerfile of `web/aws/Dockerfile`
 
 ```dockerfile
 FROM golang:1.22
