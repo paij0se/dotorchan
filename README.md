@@ -1,4 +1,5 @@
 # Dotorchan
+![image](https://github.com/paij0se/dotorchan/assets/156923829/fb8ebb25-3a32-4510-b630-b9548ecb38e6)
 
 ## Structure
 
