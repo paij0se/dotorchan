@@ -6,8 +6,23 @@
       const stats = document.getElementById("stats");
       if (stats) {
         stats.innerHTML = `
-          <b>Total posts: ${data}</b>
+          <b>Total posts:</b> <p>${data}</p>
         `;
+      }
+    })
+    .catch((err) => console.error(err));
+  //////////////////////////////////////////////////
+  const totalSizeUrl = "http://192.168.1.6:5000/totalSize";
+  fetch(totalSizeUrl)
+    .then((res) => res.json())
+    .then((data) => {
+      const size = data.bucketTotalSize;
+      if (size > 1024 && size < 1048576) {
+        document.getElementById("total-size")!.innerHTML +=
+          `<b>Active Content:</b> <p>${(size / 1024).toFixed(2)} KB</p>`;
+      } else if (size > 1048576) {
+        document.getElementById("total-size")!.innerHTML +=
+          `<b>Active Content:</b> <p>${(size / 1048576).toFixed(2)} MB</p>`;
       }
     })
     .catch((err) => console.error(err));
@@ -19,16 +34,14 @@
   </style>
 </svelte:head>
 
-<!--
-  red
--->
-<h1>Boards</h1>
 <div id="boards">
+  <h1>Boards</h1>
   <a href="/boards/g">/g/</a>
   <a href="/boards/pol">/pol/</a>
   <a href="/boards/qst">/qst/</a>
 </div>
 <div id="stats"></div>
+<div id="total-size"></div>
 
 <style>
   :global(body) {
@@ -43,6 +56,7 @@
     padding: 10px;
     display: flex;
     flex-direction: column;
+    align-items: center;
   }
   a {
     color: #c20505;
@@ -52,7 +66,9 @@
   h1 {
     color: #c20505;
   }
-  #stats {
+  #stats,
+  #total-size {
     margin-top: 20px;
+    text-align: center;
   }
 </style>

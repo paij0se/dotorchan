@@ -15,6 +15,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/gorilla/mux"
+	"github.com/paij0se/doctorchan/web/aws/peo"
 	"github.com/rs/cors"
 )
 
@@ -23,7 +24,6 @@ type File struct {
 	Data string `json:"data"`
 }
 
-// Here, you can choose the region of your bucket
 func UploadtoS3(w http.ResponseWriter, r *http.Request) {
 	var IncomingFile File
 	reqBody, err := io.ReadAll(r.Body)
@@ -111,6 +111,7 @@ func UploadtoS3(w http.ResponseWriter, r *http.Request) {
 func main() {
 	r := mux.NewRouter().StrictSlash(true)
 	r.HandleFunc("/", UploadtoS3)
+	r.HandleFunc("/totalSize", peo.SendTotalSize)
 	port, ok := os.LookupEnv("PORT")
 
 	if !ok {
