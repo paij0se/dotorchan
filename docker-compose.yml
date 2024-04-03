@@ -28,10 +28,11 @@ services:
   mongodb:
     container_name: dotorchan_mongo
     image: 'mongo:5.0.26'
+    restart: always
     volumes:
       - 'mongo:/data/db:delegated'
     ports:
-      - '27018:27017'
+      - '27017:27017'
     logging:
       driver: none
 volumes:

@@ -11,6 +11,7 @@ import (
 	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/gorilla/mux"
@@ -47,6 +48,11 @@ func UploadtoS3(w http.ResponseWriter, r *http.Request) {
 
 	sess, err := session.NewSession(&aws.Config{
 		Region: aws.String(region),
+		Credentials: credentials.NewStaticCredentials(
+			os.Getenv("AWS_ACCESS_KEY_ID"),
+			os.Getenv("AWS_SECRET_ACCESS_KEY"),
+			"",
+		),
 	})
 	if err != nil {
 		fmt.Println("Error creating session:", err)
