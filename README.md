@@ -1,5 +1,13 @@
 # Dotorchan
 
+## Structure
+
+| Codebase              |      Description          |
+| :-------------------- | :-----------------------: |
+| [butifarra](butifarra)    |      Elixir API           |
+| [papa](papa)  |     GO/AWS/S3         |
+| [lechuga](lechuga)      | Svelte fronted     |
+
 **TODO**
 
 - [ ] Captcha

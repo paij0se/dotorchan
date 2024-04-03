@@ -4,14 +4,14 @@ services:
     container_name: dotorchan
     image: 'dotorchan:0.1.0'
     restart: always
-    build: .
+    build: ./butifarra
     ports:
       - '8080:8080'
     depends_on:
       - mongodb
   go_microservice:
     container_name: go_microservice
-    build: ./web/aws
+    build: ./papa
     restart: always
     ports:
       - '5000:5000'
@@ -20,7 +20,7 @@ services:
   web:
     container_name: dotorchan_web
     image: 'dotorchan_web:0.1.0'
-    build: ./web
+    build: ./lechuga
     ports:
       - '4173:4173'
     depends_on:
