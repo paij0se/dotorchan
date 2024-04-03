@@ -68,25 +68,9 @@ function getPosts(board: string) {
                 }
                 break;
               case "png":
-                document.getElementById(
-                  "output"
-                )!.innerHTML += `<img src="${objs.file.url}" width=600 height=400 alt="image">`;
-                break;
               case "webp":
-                document.getElementById(
-                  "output"
-                )!.innerHTML += `<img src="${objs.file.url}" width=600 height=400 alt="image">`;
-                break;
               case "jpg":
-                document.getElementById(
-                  "output"
-                )!.innerHTML += `<img src="${objs.file.url}" width=600 height=400 alt="image">`;
-                break;
               case "jpeg":
-                document.getElementById(
-                  "output"
-                )!.innerHTML += `<img src="${objs.file.url}" width=600 height=400 alt="image">`;
-                break;
               case "gif":
                 document.getElementById(
                   "output"
