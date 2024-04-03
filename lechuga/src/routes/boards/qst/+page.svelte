@@ -1,75 +1,46 @@
 <script lang="ts">
   import { getPosts } from "../../../functions/getposts";
+  import { postToDotorChan } from "../../../functions/post";
   import { browser } from "$app/environment";
+  const baseURL = "http://192.168.1.6:8080/api/v1/";
+  const s3URL = "http://192.168.1.6:5000";
   getPosts("qst");
-  const url = "http://192.168.1.6:8080/api/v1/qst";
   let fileInput: any;
   let files: any;
-  let avatar: any;
   let fileS3: any;
-  function getBase64(image: Blob) {
+
+  function UploadtoS3(image: Blob) {
+    let avatar: any;
     const reader = new FileReader();
     reader.readAsDataURL(image);
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       if (e.target) {
         avatar = e.target.result;
-        if (e.target && typeof e.target.result === "string") {
-          uploadFunction(e.target.result);
+        if (typeof e.target.result === "string") {
+          const imgData = e.target.result.split(",");
+          const data = { image: imgData[1] };
+          if (imgData[1].length > 20971520) {
+            alert("File is too large, max size is 20MB");
+            return;
+          }
+          const res = await fetch(s3URL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: files[0].name,
+              data: data["image"],
+            }),
+          });
+          const s3Url = await res.json();
+          fileS3 = s3Url;
+          if (browser) {
+            document.getElementById("fileName")!.innerText = files[0].name;
+          }
         }
       }
     };
-  }
-  async function uploadFunction(imgBase64: string) {
-    const data: { image?: string } = {};
-    const imgData = imgBase64.split(",");
-    data["image"] = imgData[1];
-    if (imgData[1].length > 419430400) {
-      alert("file is too large, max size is 400mb");
-      return;
-    }
-    // TODO: Upload file to S3
-    const apiS3 = "http://192.168.1.6:5000";
-    const res = await fetch(apiS3, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: files[0].name,
-        data: data["image"],
-      }),
-    });
-    const s3Url = await res.json();
-    fileS3 = s3Url;
-    if (browser) {
-      document.getElementById("fileName")!.innerText = files[0].name;
-    }
-  }
-  async function post() {
-    const content = document.querySelector("textarea")!.value;
-    if (content.trim() === "") {
-      alert("Content can't be empty");
-      return;
-    }
-    if (content.length > 8000 || content.length < 1) {
-      alert("Content is too long or too short");
-      return;
-    }
-    if (browser) {
-      // TODO: Unique ID with cookie
-      console.log(document.cookie);
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          content: document.querySelector("textarea")!.value,
-          file: fileS3,
-        }),
-      });
-      location.reload();
-    }
   }
 </script>
 
@@ -90,7 +61,7 @@
     type="file"
     bind:files
     bind:this={fileInput}
-    on:change={() => getBase64(files[0])}
+    on:change={() => UploadtoS3(files[0])}
   />
   <button class="upload-btn" on:click={() => fileInput.click()}
     >Upload file</button
@@ -98,7 +69,11 @@
 </div>
 <div id="fileName"></div>
 <br />
-<button class="upload-btn" on:click={async () => await post()}>post</button>
+<button
+  class="upload-btn"
+  on:click={async () => await postToDotorChan(baseURL, fileS3, "qst")}
+  >post</button
+>
 <h1>Posts</h1>
 <div id="output"></div>
 <div id="codeblock"></div>
