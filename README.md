@@ -1,5 +1,6 @@
 # Dotorchan
-![Screenshot from 2024-04-03 18-48-52](https://github.com/paij0se/dotorchan/assets/156923829/62297e4c-9a42-4126-b590-6a78155f0144)
+![Screenshot from 2024-04-04 14-50-01](https://github.com/paij0se/dotorchan/assets/156923829/e5a4e48a-1a52-43de-9ad0-86491f9000a0)
+
 
 ## Structure
 
