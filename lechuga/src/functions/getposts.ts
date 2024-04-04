@@ -7,6 +7,10 @@ interface Post {
   created_at: string;
   file: {
     filename: string;
+    dimensions: {
+      width: number;
+      height: number;
+    }
     format: string;
     url: string;
     size: number;

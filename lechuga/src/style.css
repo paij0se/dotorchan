@@ -1,32 +1,32 @@
 hr {
-    border-color: #717780;
-  }
-  :global(body) {
-    background-color: #313338;
-    color: #dbdee1;
-    transition: background-color 0.3s;
-  }
-  .container {
-    display: flex;
-    flex-direction: column;
-  }
+  border-color: #717780;
+}
+:global(body) {
+  background-color: #313338;
+  color: #dbdee1;
+  font-family: "gg sans normal";
+}
+.container {
+  display: flex;
+  flex-direction: column;
+}
 
-  .hidden {
-    display: none;
-  }
+.hidden {
+  display: none;
+}
 
-  .upload-btn {
-    width: 128px;
-    height: 32px;
-    background-color: black;
-    font-family: sans-serif;
-    color: white;
-    font-weight: bold;
-    border: none;
-  }
+.upload-btn {
+  width: 128px;
+  height: 32px;
+  background-color: black;
+  font-family: sans-serif;
+  color: white;
+  font-weight: bold;
+  border: none;
+}
 
-  .upload-btn:hover {
-    background-color: white;
-    color: black;
-    outline: black solid 2px;
-  }
+.upload-btn:hover {
+  background-color: white;
+  color: black;
+  outline: black solid 2px;
+}

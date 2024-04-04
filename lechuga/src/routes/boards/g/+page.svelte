@@ -23,7 +23,7 @@
   onMount(async () => {
     fetch(baseURL + "g")
       .then((response) => response.json())
-      .then((data) => {
+      .then((data): ReturnType<() => void> => {
         apiData.set(data);
       })
       .catch((error) => {
@@ -104,8 +104,31 @@
 {#each $boardPosts as post}
   <p>{post.content}</p>
   {#if post.file}
-    {#if post.file.format === "png" || post.file.format === "jpg" || post.file.format === "jpeg" || post.file.format === "gif" || post.file.format === "webp"}
-      <img src={post.file.url} alt="file" />
+    {#if post.file.format === "png" || post.file.format === "jpg"  || post.file.format === "gif"}
+      <!-- WTF -->
+      {#if (post.file.dimensions.height > 500 && post.file.dimensions.height < 1080) || (post.file.dimensions.width > 500 && post.file.dimensions.width <= 1920)}
+        <a href={post.file.url} download
+          >{post.file.dimensions.width}x{post.file.dimensions.height}</a
+        >
+        <br />
+        <img
+          src={post.file.url}
+          alt="file"
+          width={post.file.dimensions.width / 2}
+          height={post.file.dimensions.height / 2}
+        />
+        <!-- If the image is greater than 1920x1080-->
+      {:else if post.file.dimensions.height > 1080 || post.file.dimensions.width > 1920}
+        <a href={post.file.url} download
+          >{post.file.dimensions.width}x{post.file.dimensions.height}</a
+        >
+        <br />
+        <img src={post.file.url} alt="file" width="680" height="420" />
+      {:else}
+        <a href={post.file.url} download>{post.file.filename}</a>
+        <br />
+        <img src={post.file.url} alt="file" />
+      {/if}
     {:else if post.file.format === "mp4"}
       <video controls>
         <source src={post.file.url} type="video/mp4" />

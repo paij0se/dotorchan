@@ -5,6 +5,10 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"image"
+	_ "image/gif"
+	_ "image/jpeg"
+	_ "image/png"
 	"io"
 	"math/rand"
 	"net/http"
@@ -24,6 +28,18 @@ type File struct {
 	Data string `json:"data"`
 }
 
+func getImageDimension(imagePath string) (int, int) {
+	file, err := os.Open(imagePath)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
+	}
+
+	image, _, err := image.DecodeConfig(file)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%s: %v\n", imagePath, err)
+	}
+	return image.Width, image.Height
+}
 func UploadtoS3(w http.ResponseWriter, r *http.Request) {
 	var IncomingFile File
 	reqBody, err := io.ReadAll(r.Body)
@@ -94,14 +110,16 @@ func UploadtoS3(w http.ResponseWriter, r *http.Request) {
 	// send the s3 link to the client
 	s3Url := "https://" + bucket + ".s3.amazonaws.com/" + key
 	fileSize := buf.Len()
-	// get the file format after the dot
 	fileFormat := key[len(key)-3:]
+	fmt.Println(getImageDimension(IncomingFile.Name))
 	fmt.Println(s3Url)
+	width, height := getImageDimension(IncomingFile.Name)
 	json.NewEncoder(w).Encode(map[string]interface{}{
-		"url":      s3Url,
-		"size":     fileSize,
-		"filename": IncomingFile.Name,
-		"format":   fileFormat,
+		"url":        s3Url,
+		"size":       fileSize,
+		"filename":   IncomingFile.Name,
+		"format":     fileFormat,
+		"dimensions": map[string]int{"height": height, "width": width},
 	})
 	// delete the file from the disk
 	err = os.Remove(IncomingFile.Name)
