@@ -12,7 +12,11 @@
       <label for="id">id:</label>
       <input type="text" id="message_id" required />
       <label for="id">board:</label>
-      <input type="text" id="board" required />
+      <select id="board" required>
+        <option value="g">/g/</option>
+        <option value="qst">/qst/</option>
+        <option value="pol">/pol/</option>
+      </select>
 
       <button type="submit">delete</button>
       <div id="result"></div>

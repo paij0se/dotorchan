@@ -33,15 +33,26 @@
     @import url("https://fonts.cdnfonts.com/css/gg-sans-2");
   </style>
 </svelte:head>
+<img
+  src="https://media.discordapp.net/attachments/1216124670957326407/1225532039646679202/Brown_Minimalist_Podcast_Promotion_Youtube_Thumbnail-removebg-preview.png?ex=662178a7&is=660f03a7&hm=bc8c6ad0c93ceadb0e8d1acc29ae5668a6f2e7a3bf373dc2dff357c231e0eb41&=&format=webp&quality=lossless&width=832&height=468"
+  alt="logo"
+/>
+
+<br />
 
 <div id="boards">
-  <h1>Boards</h1>
+  <h2>Boards</h2>
   <a href="/boards/g">/g/</a>
   <a href="/boards/pol">/pol/</a>
   <a href="/boards/qst">/qst/</a>
 </div>
-<div id="stats"></div>
-<div id="total-size"></div>
+
+<br />
+
+<div id="other">
+  <div id="stats"></div>
+  <div id="total-size"></div>
+</div>
 
 <style>
   :global(body) {
@@ -50,9 +61,17 @@
     transition: background-color 0.3s;
     font-family: "gg sans Normal";
   }
+  #other {
+    margin: auto;
+    border: 0.5px solid #880000;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
   #boards {
     margin: auto;
-    border: 3px solid #424549;
+    border: 0.5px solid #880000;
     padding: 10px;
     display: flex;
     flex-direction: column;
@@ -61,10 +80,18 @@
   a {
     color: #c20505;
     text-decoration: none;
+    font-size: 20px;
+  }
+  h2 {
+    color: #c20505;
     font-size: 30px;
   }
-  h1 {
-    color: #c20505;
+  img {
+    display: block;
+    height: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    width: 20%;
   }
   #stats,
   #total-size {
