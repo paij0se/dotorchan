@@ -113,6 +113,13 @@
       </video>
     {:else}
       <a href={post.file.url} download>{post.file.filename}</a>
+      {#if post.file.size > 1024 && post.file.size < 1048576}
+        <p>{(post.file.size / 1024).toFixed(2)} KB</p>
+      {:else if post.file.size > 1048576}
+        <p>{(post.file.size / 1048576).toFixed(2)} MB</p>
+      {:else}
+        <p>{post.file.size} B</p>
+      {/if}
     {/if}
   {/if}
   <p>{dateConverter(post.created_at)}</p>
@@ -125,36 +132,5 @@
 {/each}
 
 <style>
-  hr {
-    border-color: #717780;
-  }
-  :global(body) {
-    background-color: #313338;
-    color: #dbdee1;
-    transition: background-color 0.3s;
-  }
-  .container {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .hidden {
-    display: none;
-  }
-
-  .upload-btn {
-    width: 128px;
-    height: 32px;
-    background-color: black;
-    font-family: sans-serif;
-    color: white;
-    font-weight: bold;
-    border: none;
-  }
-
-  .upload-btn:hover {
-    background-color: white;
-    color: black;
-    outline: black solid 2px;
-  }
+  @import "../../../style.css";
 </style>
