@@ -1,6 +1,16 @@
 hr {
   border-color: #717780;
 }
+a {
+  text-decoration: none;
+  color: #7289DA;
+}
+
+video {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+}
 :global(body) {
   background-color: #313338;
   color: #dbdee1;

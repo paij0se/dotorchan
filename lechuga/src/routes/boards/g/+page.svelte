@@ -42,8 +42,8 @@
         if (typeof e.target.result === "string") {
           const imgData = e.target.result.split(",");
           const data = { image: imgData[1] };
-          if (imgData[1].length > 20971520) {
-            alert("File is too large, max size is 20MB");
+          if (imgData[1].length > 26214400) {
+            alert("File is too large, max size is 25MB");
             return;
           }
           const res = await fetch(s3URL, {
@@ -58,7 +58,6 @@
           });
           const s3Url: PostToS3 = await res.json();
           fileS3 = s3Url;
-          console.log(fileS3.url);
           if (browser) {
             document.getElementById("fileName")!.innerText = files[0].name;
           }
@@ -104,8 +103,7 @@
 {#each $boardPosts as post}
   <p>{post.content}</p>
   {#if post.file}
-    {#if post.file.format === "png" || post.file.format === "jpg"  || post.file.format === "gif"}
-      <!-- WTF -->
+    {#if post.file.format === "png" || post.file.format === "jpg" || post.file.format === "gif"}
       {#if (post.file.dimensions.height > 500 && post.file.dimensions.height < 1080) || (post.file.dimensions.width > 500 && post.file.dimensions.width <= 1920)}
         <a href={post.file.url} download
           >{post.file.dimensions.width}x{post.file.dimensions.height}</a
@@ -117,7 +115,6 @@
           width={post.file.dimensions.width / 2}
           height={post.file.dimensions.height / 2}
         />
-        <!-- If the image is greater than 1920x1080-->
       {:else if post.file.dimensions.height > 1080 || post.file.dimensions.width > 1920}
         <a href={post.file.url} download
           >{post.file.dimensions.width}x{post.file.dimensions.height}</a
@@ -130,6 +127,16 @@
         <img src={post.file.url} alt="file" />
       {/if}
     {:else if post.file.format === "mp4"}
+      {#if post.file.size > 1024 && post.file.size < 1048576}
+        <a href={post.file.url} download
+          >{(post.file.size / 1024).toFixed(2)}} KB</a
+        >
+      {:else if post.file.size > 1048576}
+        <a href={post.file.url} download
+          >{(post.file.size / 1048576).toFixed(2)} MB</a
+        >
+      {/if}
+      <br />
       <video controls>
         <source src={post.file.url} type="video/mp4" />
         <track kind="captions" />
