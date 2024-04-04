@@ -4,9 +4,11 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 )
 
@@ -34,13 +36,18 @@ type S3Client interface {
 
 func SendTotalSize(w http.ResponseWriter, r *http.Request) {
 	// Create an S3 client
-	cfg, _ := config.LoadDefaultConfig(context.TODO())
+	cfg, err := config.LoadDefaultConfig(context.TODO(),
+		config.WithCredentialsProvider(credentials.NewStaticCredentialsProvider(os.Getenv("AWS_ACCESS_KEY_ID"), os.Getenv("AWS_SECRET_ACCESS_KEY"), "")),
+		config.WithRegion("us-east-1"),
+	)
+	if err != nil {
+		fmt.Println("unable to load SDK config, ", err)
+	}
 	s3client := s3.NewFromConfig(cfg)
 
 	size, err := S3ObjectsSize("dotorchan", s3client)
 	if err != nil {
-		fmt.Println("Error getting size of objects in bucket: ", err)
-		return
+		fmt.Println(err)
 	}
 
 	// send a json response
