@@ -1,14 +1,36 @@
 <script lang="ts">
-  import { getPosts } from "../../../functions/getposts";
   import { postToDotorChan } from "../../../functions/post";
+  import {
+    apiData,
+    boardPosts,
+    dateConverter,
+  } from "../../../functions/getposts";
   import { browser } from "$app/environment";
+  import { onMount } from "svelte";
   const baseURL = "http://192.168.1.6:8080/api/v1/";
   const s3URL = "http://192.168.1.6:5000";
-  getPosts("g");
   let fileInput: any;
   let files: any;
   let avatar: any;
   let fileS3: any;
+  interface PostToS3 {
+    filename: string;
+    format: string;
+    size: number;
+    url: string;
+  }
+
+  onMount(async () => {
+    fetch(baseURL + "g")
+      .then((response) => response.json())
+      .then((data) => {
+        apiData.set(data);
+      })
+      .catch((error) => {
+        console.log(error);
+        return [];
+      });
+  });
 
   function UploadtoS3(image: Blob) {
     let avatar: any;
@@ -34,8 +56,9 @@
               data: data["image"],
             }),
           });
-          const s3Url = await res.json();
+          const s3Url: PostToS3 = await res.json();
           fileS3 = s3Url;
+          console.log(fileS3.url);
           if (browser) {
             document.getElementById("fileName")!.innerText = files[0].name;
           }
@@ -77,19 +100,38 @@
   >post</button
 >
 <h1>Posts</h1>
-<div id="output"></div>
+<hr />
+{#each $boardPosts as post}
+  <p>{post.content}</p>
+  {#if post.file}
+    {#if post.file.format === "png" || post.file.format === "jpg" || post.file.format === "jpeg" || post.file.format === "gif" || post.file.format === "webp"}
+      <img src={post.file.url} alt="file" />
+    {:else if post.file.format === "mp4"}
+      <video controls>
+        <source src={post.file.url} type="video/mp4" />
+        <track kind="captions" />
+      </video>
+    {:else}
+      <a href={post.file.url} download>{post.file.filename}</a>
+    {/if}
+  {/if}
+  <p>{dateConverter(post.created_at)}</p>
+  <details>
+    <summary>More</summary>
+    <p>{post.message_id}</p>
+    <p>@{post.user_id}</p>
+  </details>
+  <hr />
+{/each}
 
 <style>
+  hr {
+    border-color: #717780;
+  }
   :global(body) {
     background-color: #313338;
     color: #dbdee1;
     transition: background-color 0.3s;
-  }
-  #output {
-    width: 80%;
-    max-width: 800px;
-    font-size: 20;
-    font-family: "gg sans Normal";
   }
   .container {
     display: flex;

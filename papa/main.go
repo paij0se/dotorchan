@@ -94,11 +94,14 @@ func UploadtoS3(w http.ResponseWriter, r *http.Request) {
 	// send the s3 link to the client
 	s3Url := "https://" + bucket + ".s3.amazonaws.com/" + key
 	fileSize := buf.Len()
+	// get the file format after the dot
+	fileFormat := key[len(key)-3:]
 	fmt.Println(s3Url)
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"url":      s3Url,
 		"size":     fileSize,
 		"filename": IncomingFile.Name,
+		"format":   fileFormat,
 	})
 	// delete the file from the disk
 	err = os.Remove(IncomingFile.Name)
