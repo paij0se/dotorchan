@@ -9,8 +9,8 @@
     <h1>Admin Dashboard</h1>
     <h2>Delete posts:</h2>
     <form id="deleteForm" method="post">
-      <label for="id">id:</label>
-      <input type="text" id="message_id" required />
+      <label for="id">user_id:</label>
+      <input type="text" id="user_id" required />
       <label for="id">board:</label>
       <select id="board" required>
         <option value="g">/g/</option>
@@ -26,13 +26,11 @@
       const deleteForm = document.getElementById("deleteForm");
       deleteForm.addEventListener("submit", function (event) {
         event.preventDefault(); // Prevent the form from submitting normally
-        const id = document.getElementById("message_id").value;
+        const id = document.getElementById("user_id").value;
         const board = document.getElementById("board").value;
         // id only can be a number
-        if (isNaN(id)) {
-          alert("id must be a number");
-          return;
-        }
+        console.log(id)
+     
         const url = location.origin + "/admin/delete";
         fetch(url, {
           method: "DELETE",

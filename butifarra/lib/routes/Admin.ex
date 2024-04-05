@@ -43,13 +43,12 @@ defmodule Routes.Admin do
           end
 
         board |> IO.inspect(label: "board")
-        String.to_integer(id) |> IO.inspect(label: "id")
-
+        id |> IO.inspect(label: "id")
         c = Db.Connect.connect()
         # {:ok, %Mongo.DeleteResult{acknowledged: true, deleted_count: 1}}
         # get the deleted_count
         {:ok, %Mongo.DeleteResult{deleted_count: deleted_count}} =
-          Mongo.delete_one(c, board, %{"message_id" => String.to_integer(id)})
+          Mongo.delete_one(c, board, %{"user_id" => id})
 
         if deleted_count == 0 do
           response = %{
@@ -62,19 +61,19 @@ defmodule Routes.Admin do
             404,
             Jason.encode!(response)
           )
+        else
+          response = %{
+            "status" => "ok",
+            "id" => id,
+            "board" => board
+          }
+
+          send_resp(
+            conn |> put_resp_content_type("application/json"),
+            400,
+            Jason.encode!(response)
+          )
         end
-
-        response = %{
-          "status" => "ok",
-          "id" => id,
-          "board" => board
-        }
-
-        send_resp(
-          conn |> put_resp_content_type("application/json"),
-          400,
-          Jason.encode!(response)
-        )
 
       false ->
         send_resp(

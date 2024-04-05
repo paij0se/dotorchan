@@ -1,7 +1,6 @@
 import { writable, derived } from "svelte/store";
 
 interface Post {
-  message_id: string;
   user_id: string;
   content: string;
   created_at: string;

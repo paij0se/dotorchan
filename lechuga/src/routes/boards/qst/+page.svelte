@@ -153,11 +153,7 @@
     {/if}
   {/if}
   <p>{dateConverter(post.created_at)}</p>
-  <details>
-    <summary>More</summary>
-    <p>{post.message_id}</p>
-    <p>@{post.user_id}</p>
-  </details>
+  <p>Anon: @{post.user_id}</p>
   <hr />
 {/each}
 
