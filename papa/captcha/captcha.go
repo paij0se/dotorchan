@@ -45,7 +45,7 @@ func CaptchaHandle(w http.ResponseWriter, r *http.Request) {
 	img, err := captcha.New(300, 100, captcha.SetOption(func(o *captcha.Options) {
 		o.TextLength = 6
 		o.Noise = 0.5
-		o.CharPreset = "AEi123456789NadD"
+		o.CharPreset = "aAbBdDeEfFgGhHIjJ23456789"
 		o.BackgroundColor = color.White
 
 	}))

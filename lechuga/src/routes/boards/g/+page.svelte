@@ -7,8 +7,9 @@
   } from "../../../functions/getposts";
   import { browser } from "$app/environment";
   import { onMount } from "svelte";
-  const baseURL = "http://192.168.1.6:8080/api/v1/";
-  const s3URL = "http://192.168.1.6:5000";
+  import url from "../../../services.json";
+  const baseURL = url["dotorchan-api"];
+  const s3URL = url["dotochan-aws"];
   let fileInput: any;
   let files: any;
   let avatar: any;
@@ -95,13 +96,18 @@
 <br />
 <button
   class="upload-btn"
-  on:click={async () => await postToDotorChan(baseURL, fileS3, "g")}
-  >post</button
+  on:click={async () =>
+    await postToDotorChan(
+      baseURL,
+      fileS3,
+      "g",
+      `${url["dotochan-aws"]}/captcha`
+    )}>post</button
 >
 
 <div class="container">
   <br />
-  <img id="captcha" src="" alt="." height="150" width="500"  />
+  <img id="captcha" src="" alt="." height="150" width="500" />
   <input type="text" id="captcha-input" placeholder="TYPE THE CAPTCHA HERE" />
   <br />
   <button class="upload-btn" id="verify">verify</button>

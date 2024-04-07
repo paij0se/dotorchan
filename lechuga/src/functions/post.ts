@@ -2,9 +2,9 @@ import { browser } from "$app/environment";
 export async function postToDotorChan(
   baseURL: string,
   fileS3: string,
-  board: string
+  board: string,
+  captchaUrl: string
 ) {
-  const captchaUrl = "http://192.168.1.6:5000/captcha";
   const contentTextarea = document.querySelector("textarea")!;
   const content = contentTextarea.value;
 
