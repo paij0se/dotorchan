@@ -12,7 +12,7 @@
 
 **TODO**
 
-- [ ] Captcha
+- [x] Captcha
 - [ ] Threads
 - [ ] admin dashboard
 - [x] able to upload files
