@@ -19,29 +19,29 @@ defmodule Dotorchan.Router do
 
   #####################################################
   post "/api/v1/g" do
-    Routes.Boards.G.post(conn, "g")
+    Routes.Boards.post(conn, "g")
   end
 
   get "/api/v1/g" do
-    Routes.Boards.G.get_publications(conn, "g")
+    Routes.Boards.get_publications(conn, "g")
   end
 
   #####################################################
   post "/api/v1/pol" do
-    Routes.Boards.G.post(conn, "pol")
+    Routes.Boards.post(conn, "pol")
   end
 
   get "/api/v1/pol" do
-    Routes.Boards.G.get_publications(conn, "pol")
+    Routes.Boards.get_publications(conn, "pol")
   end
 
   #########################################################
   post "/api/v1/qst" do
-    Routes.Boards.G.post(conn, "qst")
+    Routes.Boards.post(conn, "qst")
   end
 
   get "/api/v1/qst" do
-    Routes.Boards.G.get_publications(conn, "qst")
+    Routes.Boards.get_publications(conn, "qst")
   end
 
   #############################################################

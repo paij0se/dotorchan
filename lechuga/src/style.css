@@ -11,6 +11,10 @@ video {
   height: auto;
   max-width: 100%;
 }
+#captcha-input{
+  width: 250px;
+
+}
 :global(body) {
   background-color: #313338;
   color: #dbdee1;

@@ -98,6 +98,13 @@
   on:click={async () => await postToDotorChan(baseURL, fileS3, "qst")}
   >post</button
 >
+<div class="container">
+  <br />
+  <img id="captcha" src="" alt="." height="150" width="500"  />
+  <input type="text" id="captcha-input" placeholder="TYPE THE CAPTCHA HERE" />
+  <br />
+  <button class="upload-btn" id="verify">verify</button>
+</div>
 <h1>Posts</h1>
 <hr />
 {#each $boardPosts as post}

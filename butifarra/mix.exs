@@ -26,6 +26,7 @@ defmodule Dotorchan.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:jason, "~> 1.2.0"},
       {:cors_plug, "~> 3.0"},
+      {:httpoison, "~> 2.0"},
     ]
   end
 end

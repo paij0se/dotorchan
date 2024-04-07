@@ -1,4 +1,4 @@
-defmodule Routes.Boards.G do
+defmodule Routes.Boards do
   import Plug.Conn
 
   def post(conn, board) do
@@ -29,41 +29,73 @@ defmodule Routes.Boards.G do
         )
 
       _ ->
-        # unique id, life 4chan XD
-        # $now.=" ID:".substr(crypt(md5($_SERVER["REMOTE_ADDR"].'id'.date("Ymd", $time)),'id'),+3);
-        # user_id (ip) + (datetime) + (random number) + (random number)
-        user_id =
-          String.slice(Tools.Encrypt.e(Tools.Ip.get(conn)), 0, 4) <>
-            String.slice(Tools.Encrypt.e(Integer.to_string(System.monotonic_time())), 0, 4) <>
-            String.slice(
-              Integer.to_string(Enum.random(1..100_000_000_000)),
-              0,
-              4
-            ) <>
-            String.slice(
-              Integer.to_string(Enum.random(1..100_000_000_000)),
-              0,
-              4
-            )
-
-        IO.inspect(file, label: "file")
-
-        response = %{
-          "user_id" => user_id,
-          "content" => content,
-          "ip" => Tools.Ip.get(conn),
-          "created_at" => DateTime.utc_now() |> DateTime.to_iso8601(),
-          "file" => file
-        }
-
+        # check if the ip already resolved the captcha
         c = Db.Connect.connect()
-        Mongo.insert_one(c, board, response) |> IO.inspect(label: "insert")
+        ip = Tools.Ip.get(conn)
 
-        send_resp(
-          conn |> put_resp_content_type("application/json"),
-          200,
-          Jason.encode!(response)
-        )
+        captcha =
+          Mongo.find_one(c, "ips-to-verify", %{"ip" => ip}) |> IO.inspect(label: "captcha")
+
+        # captcha: %{
+        # "_id" => #BSON.ObjectId<6612b9150f14923e6478d5f4>,
+        # "ip" => "192.168.1.6",
+        # "text" => "aNDd7U",
+        # "verified" => false
+        # }
+        # if verified is false, return 403
+        # if verified is true, continue
+        if captcha["verified"] == false or captcha["verified"] == nil do
+          send_resp(
+            conn |> put_resp_content_type("application/json"),
+            403,
+            Jason.encode!(%{"error" => "captcha required"})
+          )
+        else
+          # unique id, life 4chan XD
+          # $now.=" ID:".substr(crypt(md5($_SERVER["REMOTE_ADDR"].'id'.date("Ymd", $time)),'id'),+3);
+          # user_id (ip) + (datetime) + (random number) + (random number)
+          user_id =
+            String.slice(Tools.Encrypt.e(Tools.Ip.get(conn)), 0, 4) <>
+              String.slice(Tools.Encrypt.e(Integer.to_string(System.monotonic_time())), 0, 4) <>
+              String.slice(
+                Integer.to_string(Enum.random(1..100_000_000_000)),
+                0,
+                4
+              ) <>
+              String.slice(
+                Integer.to_string(Enum.random(1..100_000_000_000)),
+                0,
+                4
+              )
+
+          IO.inspect(file, label: "file")
+
+          response = %{
+            "user_id" => user_id,
+            "content" => content,
+            "created_at" => DateTime.utc_now() |> DateTime.to_iso8601(),
+            "file" => file
+          }
+
+          for_the_database = %{
+            "user_id" => user_id,
+            "content" => content,
+            "ip" => ip,
+            "created_at" => DateTime.utc_now() |> DateTime.to_iso8601(),
+            "file" => file
+          }
+
+          Mongo.insert_one(c, board, for_the_database) |> IO.inspect(label: "insert")
+
+          send_resp(
+            conn |> put_resp_content_type("application/json"),
+            200,
+            Jason.encode!(response)
+          )
+
+          # delete the captcha
+          Mongo.delete_one(c, "ips-to-verify", %{"ip" => ip})
+        end
     end
   end
 
