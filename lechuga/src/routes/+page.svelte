@@ -1,5 +1,8 @@
 <script lang="ts">
-  const url = "http://192.168.1.6:8080/api/v1/stats";
+  import services from "../services.json";
+  const baseURL = services["dotorchan-api"];
+  const s3URL = services["dotochan-aws"];
+  const url = baseURL + "/stats";
   fetch(url)
     .then((res) => res.json())
     .then((data) => {
@@ -12,7 +15,7 @@
     })
     .catch((err) => console.error(err));
   //////////////////////////////////////////////////
-  const totalSizeUrl = "http://192.168.1.6:5000/totalSize";
+  const totalSizeUrl = s3URL + "/totalSize";
   fetch(totalSizeUrl)
     .then((res) => res.json())
     .then((data) => {

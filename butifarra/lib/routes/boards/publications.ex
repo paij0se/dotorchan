@@ -32,7 +32,7 @@ defmodule Routes.Boards do
         # check if the ip already resolved the captcha
         c = Db.Connect.connect()
         ip = Tools.Ip.get(conn)
-
+        IO.inspect(ip, label: "ip")
         captcha =
           Mongo.find_one(c, "ips-to-verify", %{"ip" => ip}) |> IO.inspect(label: "captcha")
 
