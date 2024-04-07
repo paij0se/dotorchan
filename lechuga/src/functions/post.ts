@@ -1,4 +1,3 @@
-import { browser } from "$app/environment";
 export async function postToDotorChan(
   baseURL: string,
   fileS3: string,
@@ -7,19 +6,28 @@ export async function postToDotorChan(
 ) {
   const contentTextarea = document.querySelector("textarea")!;
   const content = contentTextarea.value;
-
+  const postButton1 = document.getElementById("post-btn") as HTMLButtonElement;
   if (content.trim() === "") {
     alert("Content can't be empty");
+    location.reload();
     return;
   }
 
   if (content.length > 8000 || content.length < 1) {
     alert("Content is too long or too short");
+    location.reload();
     return;
   }
   // get the captcha http://192.168.1.6:5000/captcha
   (document.getElementById("captcha") as HTMLImageElement).src = captchaUrl;
+  // set the width and height of the captcha
+  (document.getElementById("captcha") as HTMLImageElement).width = 400;
+  (document.getElementById("captcha") as HTMLImageElement).height = 150;
   const postButton = document.getElementById("verify") as HTMLButtonElement;
+  postButton1.remove();
+  postButton.innerText = "post";
+  postButton.style.backgroundColor = "#898f9c";
+  postButton.style.color = "white";
   postButton.onclick = () => {
     const captchaInput = document.getElementById(
       "captcha-input"
@@ -38,13 +46,13 @@ export async function postToDotorChan(
       method: "GET",
     })
       .then((response) => response.json())
-      .then((data) => {
+      .then(async (data) => {
         console.log(data);
         if (data == false) {
           alert("Captcha is incorrect");
           location.reload();
         } else {
-          fetch(baseURL + board, {
+          await fetch(baseURL + board, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -55,6 +63,8 @@ export async function postToDotorChan(
             }),
           });
           location.reload();
+
+          console.log("posting to dotorchan");
         }
       });
   };

@@ -95,7 +95,7 @@
 <div id="fileName"></div>
 <br />
 <button
-  class="upload-btn"
+  id="post-btn"
   on:click={async () =>
     await postToDotorChan(
       baseURL,
@@ -105,13 +105,17 @@
     )}>post</button
 >
 
-<div class="container">
-  <br />
-  <img id="captcha" src="" alt="." height="150" width="500" />
+<div class="captcha-container">
+  <!-- svelte-ignore a11y-missing-attribute -->
+  <img id="captcha" src="" />
   <input type="text" id="captcha-input" placeholder="TYPE THE CAPTCHA HERE" />
-  <br />
-  <button class="upload-btn" id="verify">verify</button>
+  <button
+    class="upload-btn"
+    id="verify"
+    style="background-color: #313338; color: #313338;">verify</button
+  >
 </div>
+
 <h1>Posts</h1>
 <hr />
 {#each $boardPosts as post}

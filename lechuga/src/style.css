@@ -3,7 +3,7 @@ hr {
 }
 a {
   text-decoration: none;
-  color: #7289DA;
+  color: #7289da;
 }
 
 video {
@@ -11,9 +11,8 @@ video {
   height: auto;
   max-width: 100%;
 }
-#captcha-input{
+#captcha-input {
   width: 250px;
-
 }
 :global(body) {
   background-color: #313338;
@@ -24,7 +23,10 @@ video {
   display: flex;
   flex-direction: column;
 }
-
+.captcha-container {
+  display: flex;
+  flex-direction: column-reverse;
+}
 .hidden {
   display: none;
 }
@@ -33,10 +35,21 @@ video {
   width: 128px;
   height: 32px;
   background-color: black;
-  font-family: sans-serif;
+  font-family: "gg sans normal";
   color: white;
   font-weight: bold;
   border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+#post-btn {
+  width: 128px;
+  height: 32px;
+  background-color: #898f9c;
+  font-family: "gg sans normal";
+  color: white;
+  font-weight: bold;
+  border-radius: 5px;
 }
 
 .upload-btn:hover {
