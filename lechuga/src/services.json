@@ -1,4 +1,4 @@
 {
-  "dotorchan-api": "http://192.168.1.6:8080/api/v1/",
-  "dotochan-aws": "http://192.168.1.6:5000"
+  "dotorchan-api": "https://dotorchan-api-2db264ea72c8.herokuapp.com/api/v1/",
+  "dotochan-aws": "https://dotorchan-s3-c8544a0a33d6.herokuapp.com"
 }
