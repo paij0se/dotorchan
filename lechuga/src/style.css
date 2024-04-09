@@ -19,6 +19,11 @@ textarea {
   width: 250px;
   height: 150px;
 }
+#logo {
+  display: block;
+  height: 10%;
+  width: 10%;
+}
 #captcha-input,
 #title {
   width: 250px;
