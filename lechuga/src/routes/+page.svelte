@@ -45,9 +45,10 @@
 
 <div id="boards">
   <h2>Boards</h2>
-  <a href="/boards/g">/g/</a>
-  <a href="/boards/pol">/pol/</a>
-  <a href="/boards/qst">/qst/</a>
+  <a href="/boards/g">Technology</a>
+  <a href="/boards/pol">Politically Incorrect</a>
+  <a href="/boards/qst">Quests</a>
+  <a href="/boards/mu">Music</a>
 </div>
 
 <br />
