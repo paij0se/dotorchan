@@ -3,6 +3,7 @@ import { writable, derived } from "svelte/store";
 interface Post {
   user_id: string;
   content: string;
+  title: string;
   created_at: string;
   file: {
     filename: string;

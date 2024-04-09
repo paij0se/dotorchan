@@ -1,6 +1,10 @@
 hr {
   border-color: #717780;
 }
+h2 {
+  font-size: 1.5em;
+  color: #b294bb;
+}
 a {
   text-decoration: none;
   color: #7289da;
@@ -11,7 +15,12 @@ video {
   height: auto;
   max-width: 100%;
 }
-#captcha-input {
+textarea {
+  width: 250px;
+  height: 150px;
+}
+#captcha-input,
+#title {
   width: 250px;
 }
 :global(body) {

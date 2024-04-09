@@ -48,6 +48,7 @@ func UploadtoS3(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Fprintf(w, "Kindly enter data with the file name only in order to update")
 	}
+
 	json.Unmarshal(reqBody, &IncomingFile)
 	fmt.Println(IncomingFile.Name)
 	// Decode the incoming File because it is encoded in base64
@@ -96,39 +97,46 @@ func UploadtoS3(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(os.Stderr, "Error reading file:", err)
 		return
 	}
+	// 25MB is the maximum file size allowed
+	if buf.Len() > 26214400 {
+		json.NewEncoder(w).Encode(map[string]string{
+			"error": "File size too large",
+		})
+	} else {
+		// This uploads the contents of the buffer to S3
+		_, err = svc.PutObject(&s3.PutObjectInput{
+			Bucket: aws.String(bucket),
+			Key:    aws.String(key),
+			Body:   bytes.NewReader(buf.Bytes()),
+		})
+		if err != nil {
+			fmt.Println("Error uploading file:", err)
+			return
+		}
 
-	// This uploads the contents of the buffer to S3
-	_, err = svc.PutObject(&s3.PutObjectInput{
-		Bucket: aws.String(bucket),
-		Key:    aws.String(key),
-		Body:   bytes.NewReader(buf.Bytes()),
-	})
-	if err != nil {
-		fmt.Println("Error uploading file:", err)
-		return
+		fmt.Println("File uploaded successfully!!!")
+		// send the s3 link to the client
+		s3Url := "https://" + bucket + ".s3.amazonaws.com/" + key
+		fileSize := buf.Len()
+		fileFormat := key[len(key)-3:]
+		fmt.Println(getImageDimension(IncomingFile.Name))
+		fmt.Println(s3Url)
+		width, height := getImageDimension(IncomingFile.Name)
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"url":        s3Url,
+			"size":       fileSize,
+			"filename":   IncomingFile.Name,
+			"format":     fileFormat,
+			"dimensions": map[string]int{"height": height, "width": width},
+		})
+		// delete the file from the disk
+		err = os.Remove(IncomingFile.Name)
+		if err != nil {
+			fmt.Println("Error deleting file from disk:", err)
+			return
+		}
 	}
 
-	fmt.Println("File uploaded successfully!!!")
-	// send the s3 link to the client
-	s3Url := "https://" + bucket + ".s3.amazonaws.com/" + key
-	fileSize := buf.Len()
-	fileFormat := key[len(key)-3:]
-	fmt.Println(getImageDimension(IncomingFile.Name))
-	fmt.Println(s3Url)
-	width, height := getImageDimension(IncomingFile.Name)
-	json.NewEncoder(w).Encode(map[string]interface{}{
-		"url":        s3Url,
-		"size":       fileSize,
-		"filename":   IncomingFile.Name,
-		"format":     fileFormat,
-		"dimensions": map[string]int{"height": height, "width": width},
-	})
-	// delete the file from the disk
-	err = os.Remove(IncomingFile.Name)
-	if err != nil {
-		fmt.Println("Error deleting file from disk:", err)
-		return
-	}
 }
 
 func main() {

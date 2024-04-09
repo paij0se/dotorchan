@@ -20,6 +20,15 @@ defmodule Routes.Boards do
           ""
       end
 
+    title =
+      case conn.body_params do
+        %{"title" => a_title} ->
+          a_title
+
+        _ ->
+          ""
+      end
+
     case content do
       "" ->
         send_resp(
@@ -33,6 +42,7 @@ defmodule Routes.Boards do
         c = Db.Connect.connect()
         ip = Tools.Ip.get(conn)
         IO.inspect(ip, label: "ip")
+
         captcha =
           Mongo.find_one(c, "ips-to-verify", %{"ip" => ip}) |> IO.inspect(label: "captcha")
 
@@ -72,6 +82,7 @@ defmodule Routes.Boards do
 
           response = %{
             "user_id" => user_id,
+            "title" => title,
             "content" => content,
             "created_at" => DateTime.utc_now() |> DateTime.to_iso8601(),
             "file" => file
@@ -79,6 +90,7 @@ defmodule Routes.Boards do
 
           for_the_database = %{
             "user_id" => user_id,
+            "title" => title,
             "content" => content,
             "ip" => ip,
             "created_at" => DateTime.utc_now() |> DateTime.to_iso8601(),

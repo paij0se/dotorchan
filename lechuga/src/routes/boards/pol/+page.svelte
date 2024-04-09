@@ -77,7 +77,8 @@
   >back</button
 >
 <h1>/pol/ - Politically Incorrect/</h1>
-
+<input type="text" placeholder="Title (optional)" id="title" />
+<br />
 <textarea name="" id="" placeholder="Post to /pol/"></textarea>
 <div class="container">
   <input
@@ -117,6 +118,9 @@
 <h1>Posts</h1>
 <hr />
 {#each $boardPosts as post}
+  {#if post.title}
+    <h2>{post.title}</h2>
+  {/if}
   <p>{post.content}</p>
   {#if post.file}
     {#if post.file.format === "png" || post.file.format === "jpg" || post.file.format === "gif"}

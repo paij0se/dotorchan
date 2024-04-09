@@ -6,6 +6,7 @@ export async function postToDotorChan(
 ) {
   const contentTextarea = document.querySelector("textarea")!;
   const content = contentTextarea.value;
+  const title = document.getElementById("title") as HTMLInputElement;
   const postButton1 = document.getElementById("post-btn") as HTMLButtonElement;
   if (content.trim() === "") {
     alert("Content can't be empty");
@@ -58,6 +59,7 @@ export async function postToDotorChan(
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
+              title: title.value,
               content: content,
               file: fileS3,
             }),
