@@ -44,6 +44,14 @@ defmodule Dotorchan.Router do
     Routes.Boards.get_publications(conn, "qst")
   end
 
+  post "/api/v1/mu" do
+    Routes.Boards.post(conn, "mu")
+  end
+
+  get "/api/v1/mu" do
+    Routes.Boards.get_publications(conn, "mu")
+  end
+
   #############################################################
   # TODO: Implementar
   get "/api/v1/stats" do
