@@ -64,9 +64,8 @@ defmodule Routes.Boards do
           # unique id, life 4chan XD
           # $now.=" ID:".substr(crypt(md5($_SERVER["REMOTE_ADDR"].'id'.date("Ymd", $time)),'id'),+3);
           # user_id (ip) + (datetime) + (random number) + (random number)
-          user_id =
-            String.slice(Tools.Encrypt.e(Tools.Ip.get(conn)), 0, 4) <>
-              String.slice(Tools.Encrypt.e(Integer.to_string(System.monotonic_time())), 0, 4) <>
+          post_id =
+            String.slice(Tools.Encrypt.e(Integer.to_string(System.monotonic_time())), 0, 4) <>
               String.slice(
                 Integer.to_string(Enum.random(1..100_000_000_000)),
                 0,
@@ -78,10 +77,12 @@ defmodule Routes.Boards do
                 4
               )
 
+          user_id = String.slice(Tools.Encrypt.e(Tools.Ip.get(conn)), 0, 12)
           IO.inspect(file, label: "file")
 
           response = %{
             "user_id" => user_id,
+            "post_id" => post_id,
             "title" => title,
             "content" => content,
             "created_at" => DateTime.utc_now() |> DateTime.to_iso8601(),
@@ -90,6 +91,7 @@ defmodule Routes.Boards do
 
           for_the_database = %{
             "user_id" => user_id,
+            "post_id" => post_id,
             "title" => title,
             "content" => content,
             "ip" => ip,

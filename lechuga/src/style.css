@@ -5,15 +5,17 @@ h2 {
   font-size: 1.5em;
   color: #b294bb;
 }
-a {
-  text-decoration: none;
-  color: #7289da;
-}
 
 video {
   width: auto;
   height: auto;
   max-width: 100%;
+}
+footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "gg sans normal";
 }
 textarea {
   width: 250px;
@@ -29,9 +31,9 @@ textarea {
   width: 250px;
 }
 :global(body) {
-  background-color: #313338;
-  color: #dbdee1;
-  font-family: "gg sans normal";
+  background: #ffe url("../src/fade.png") top repeat-x;
+  color: #800;
+  font-family: "gg sans Normal";
 }
 .container {
   display: flex;

@@ -48,7 +48,7 @@ defmodule Routes.Admin do
         # {:ok, %Mongo.DeleteResult{acknowledged: true, deleted_count: 1}}
         # get the deleted_count
         {:ok, %Mongo.DeleteResult{deleted_count: deleted_count}} =
-          Mongo.delete_one(c, board, %{"user_id" => id})
+          Mongo.delete_one(c, board, %{"post_id" => id})
 
         if deleted_count == 0 do
           response = %{
@@ -64,7 +64,7 @@ defmodule Routes.Admin do
         else
           response = %{
             "status" => "ok",
-            "id" => id,
+            "msg_id" => id,
             "board" => board
           }
 

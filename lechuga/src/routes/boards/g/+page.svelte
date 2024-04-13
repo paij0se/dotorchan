@@ -14,10 +14,16 @@
   let fileInput: any;
   let files: any;
   let avatar: any;
+  let userUniqueID: any;
   let fileS3: any;
+  if (browser) {
+    userUniqueID = localStorage.getItem("user_id");
+  }
+
   if (browser) {
     document.title = "/g/ - Technology";
   }
+  console.log(userUniqueID);
   onMount(async () => {
     fetch(baseURL + "g")
       .then((response) => response.json())
@@ -116,7 +122,7 @@
   <button
     class="upload-btn"
     id="verify"
-    style="background-color: #313338; color: #313338;">verify</button
+    style="background-color: #FFFFEE; color: #FFFFEE;">verify</button
   >
 </div>
 
@@ -179,8 +185,24 @@
   {/if}
   <p>{dateConverter(post.created_at)}</p>
   <p>Anon: @{post.user_id}</p>
+  <p>Post ID: {post.post_id}</p>
+  {#if post.user_id === userUniqueID}
+    <button
+      on:click={async () =>
+        await fetch(baseURL + "g/" + post.post_id, {
+          method: "DELETE",
+        })}>delete</button
+    >
+  {/if}
   <hr />
 {/each}
+<footer>
+  <p>
+    All trademarks and copyrights on this page are owned by their respective
+    parties. Images uploaded are the responsibility of the Poster. Comments are
+    owned by the Poster.
+  </p>
+</footer>
 
 <style>
   @import "../../../style.css";

@@ -1,7 +1,7 @@
 import { writable, derived } from "svelte/store";
-
 interface Post {
   user_id: string;
+  post_id: string;
   content: string;
   title: string;
   created_at: string;
@@ -16,7 +16,6 @@ interface Post {
     size: number;
   };
 }
-
 export const apiData = writable([]);
 
 export const boardPosts = derived(apiData, ($apiData) => {

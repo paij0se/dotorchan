@@ -2,7 +2,7 @@
   import services from "../services.json";
   const baseURL = services["dotorchan-api"];
   const s3URL = services["dotochan-aws"];
-  const url = baseURL + "/stats";
+  const url = baseURL + "stats";
   import { browser } from "$app/environment";
   if (browser) {
     document.title = "dotorchan";
@@ -64,9 +64,8 @@
 
 <style>
   :global(body) {
-    background-color: #313338;
-    color: #dbdee1;
-    transition: background-color 0.3s;
+    background: #ffe url("../fade.png") top repeat-x;
+    color: #800;
     font-family: "gg sans Normal";
   }
   #other {
@@ -86,12 +85,12 @@
     align-items: center;
   }
   a {
-    color: #c20505;
+    color: #880000;
     text-decoration: none;
     font-size: 20px;
   }
   h2 {
-    color: #c20505;
+    color: #880000;
     font-size: 30px;
   }
   img {

@@ -59,7 +59,7 @@ export async function postToDotorChan(
           alert("Captcha is incorrect");
           location.reload();
         } else {
-          await fetch(baseURL + board, {
+          const postToDotorChan = await fetch(baseURL + board, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -70,9 +70,11 @@ export async function postToDotorChan(
               file: fileS3,
             }),
           });
-          location.reload();
 
-          console.log("posting to dotorchan");
+          const re = await postToDotorChan.json();
+          // save the user id to local storage
+          localStorage.setItem("user_id", re.user_id);
+          location.reload();
         }
       });
   };
