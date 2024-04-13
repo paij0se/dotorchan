@@ -16,7 +16,7 @@
   let avatar: any;
   let fileS3: any;
   if (browser) {
-    document.title = "/pol/ - Politically Incorrect";
+    document.title = "/qst/ - Quests";
   }
 
   onMount(async () => {
