@@ -3,6 +3,10 @@
   const baseURL = services["dotorchan-api"];
   const s3URL = services["dotochan-aws"];
   const url = baseURL + "/stats";
+  import { browser } from "$app/environment";
+  if (browser) {
+    document.title = "dotorchan";
+  }
   fetch(url)
     .then((res) => res.json())
     .then((data) => {
