@@ -1,3 +1,9 @@
+export interface PostToS3 {
+  filename: string;
+  format: string;
+  size: number;
+  url: string;
+}
 export async function postToDotorChan(
   baseURL: string,
   fileS3: string,

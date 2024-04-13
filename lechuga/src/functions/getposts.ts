@@ -10,7 +10,7 @@ interface Post {
     dimensions: {
       width: number;
       height: number;
-    }
+    };
     format: string;
     url: string;
     size: number;

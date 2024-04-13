@@ -2,7 +2,7 @@ defmodule Routes.Admin do
   import Plug.Conn
 
   def admin_auth(conn) do
-    admin_ip = System.get_env("ADMIN_IP") || "192.168.1.6"
+    admin_ip = System.get_env("ADMIN_IP") || "192.168.1.8"
     ip = Tools.Ip.get(conn)
     IO.inspect(admin_ip, label: "admin_ip")
     IO.inspect(ip, label: "ip")
@@ -16,7 +16,7 @@ defmodule Routes.Admin do
   end
 
   def delete(conn) do
-    admin_ip = System.get_env("ADMIN_IP") || "192.168.1.6"
+    admin_ip = System.get_env("ADMIN_IP") || "192.168.1.8"
     ip = Tools.Ip.get(conn)
     IO.inspect(admin_ip, label: "admin_ip")
     IO.inspect(ip, label: "ip")

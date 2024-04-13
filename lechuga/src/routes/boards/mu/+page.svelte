@@ -1,5 +1,6 @@
 <script lang="ts">
   import { postToDotorChan } from "../../../functions/post";
+  import type { PostToS3 } from "../../../functions/post";
   import {
     apiData,
     boardPosts,
@@ -14,13 +15,10 @@
   let files: any;
   let avatar: any;
   let fileS3: any;
-  interface PostToS3 {
-    filename: string;
-    format: string;
-    size: number;
-    url: string;
-  }
 
+  if (browser) {
+    document.title = "/mu/ - Music";
+  }
   onMount(async () => {
     fetch(baseURL + "mu")
       .then((response) => response.json())
