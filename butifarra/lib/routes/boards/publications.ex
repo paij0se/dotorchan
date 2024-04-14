@@ -135,4 +135,114 @@ defmodule Routes.Boards do
 
     send_resp(conn |> put_resp_content_type("application/json"), 200, response)
   end
+
+  def get_publication(conn, board) do
+    c = Db.Connect.connect()
+    post_id = conn.params["id"]
+
+    response =
+      Mongo.aggregate(c, board, [
+        %{
+          "$match" => %{
+            "post_id" => post_id
+          }
+        },
+        %{
+          "$project" => %{
+            "_id" => 0,
+            "ip" => 0,
+            "comments.ip" => 0
+          }
+        }
+      ])
+      |> Enum.to_list()
+      |> Jason.encode!()
+
+    case response do
+      "[]" ->
+        send_resp(
+          conn |> put_resp_content_type("application/json"),
+          404,
+          Jason.encode!(%{"error" => "post not found"})
+        )
+
+      _ ->
+        send_resp(conn |> put_resp_content_type("application/json"), 200, response)
+    end
+  end
+
+  def post_comment_thread(conn, board) do
+    c = Db.Connect.connect()
+    post_id = conn.params["id"]
+
+    content =
+      case conn.body_params do
+        %{"content" => a_content} ->
+          a_content
+
+        _ ->
+          ""
+      end
+
+    case content do
+      "" ->
+        send_resp(
+          conn |> put_resp_content_type("application/json"),
+          400,
+          Jason.encode!(%{"error" => "content is required"})
+        )
+
+      _ ->
+        # unique id, life 4chan XD
+        # $now.=" ID:".substr(crypt(md5($_SERVER["REMOTE_ADDR"].'id'.date("Ymd", $time)),'id'),+3);
+        # user_id (ip) + (datetime) + (random number) + (random number)
+        comment_id =
+          String.slice(Tools.Encrypt.e(Integer.to_string(System.monotonic_time())), 0, 4) <>
+            String.slice(
+              Integer.to_string(Enum.random(1..100_000_000_000)),
+              0,
+              4
+            ) <>
+            String.slice(
+              Integer.to_string(Enum.random(1..100_000_000_000)),
+              0,
+              4
+            )
+
+        user_id = String.slice(Tools.Encrypt.e(Tools.Ip.get(conn)), 0, 12)
+
+        response = %{
+          "user_id" => user_id,
+          "comment_id" => comment_id,
+          "content" => content,
+          "created_at" => DateTime.utc_now() |> DateTime.to_iso8601()
+        }
+
+        for_the_database = %{
+          "user_id" => user_id,
+          "comment_id" => comment_id,
+          "content" => content,
+          "ip" => Tools.Ip.get(conn),
+          "created_at" => DateTime.utc_now() |> DateTime.to_iso8601()
+        }
+
+        Mongo.update_one(
+          c,
+          board,
+          %{"post_id" => post_id},
+          %{
+            "$push" => %{
+              "comments" => for_the_database
+            }
+          }
+        )
+        |> IO.inspect(label: "insert")
+# curl -X POST -H "Content-Type: application/json" -d '{"content":"test"}' http://192.168.1.8:8080/api/v1/g/d72440767818
+        send_resp(
+          conn |> put_resp_content_type("application/json"),
+          200,
+          Jason.encode!(response)
+        )
+    end
+  end
 end

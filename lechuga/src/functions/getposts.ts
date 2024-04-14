@@ -1,5 +1,6 @@
 import { writable, derived } from "svelte/store";
 interface Post {
+  comments: string[] | string
   user_id: string;
   post_id: string;
   content: string;
@@ -33,11 +34,23 @@ export function dateConverter(date: string) {
     hour12: true,
   });
 }
-export function escapeHtml(unsafe: string) {
-  return unsafe
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+
+/*
+{#if post.file.size > 1024 && post.file.size < 1048576}
+        <a href={post.file.url} download
+          >{(post.file.size / 1024).toFixed(2)} KB</a
+        >
+      {:else if post.file.size > 1048576}
+        <a href={post.file.url} download
+          >{(post.file.size / 1048576).toFixed(2)} MB</a
+        >
+*/
+export function sizeConverter(size: number) {
+  if (size > 1024 && size < 1048576) {
+    return (size / 1024).toFixed(2) + " KB";
+  } else if (size > 1048576) {
+    return (size / 1048576).toFixed(2) + " MB";
+  } else {
+    return size + " B";
+  }
 }

@@ -114,11 +114,7 @@
   <!-- svelte-ignore a11y-missing-attribute -->
   <img id="captcha" src="" />
   <input type="text" id="captcha-input" placeholder="TYPE THE CAPTCHA HERE" />
-  <button
-    class="upload-btn"
-    id="verify"
-    style="background-color: #313338; color: #313338;">verify</button
-  >
+  <button class="upload-btn" id="verify">verify</button>
 </div>
 
 <h1>Posts</h1>
