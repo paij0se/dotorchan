@@ -73,15 +73,9 @@
       {/if}
       <!-- VIDEO #########################################################################3 -->
     {:else if post.file.format === "mp4"}
-      {#if post.file.size > 1024 && post.file.size < 1048576}
-        <a href={post.file.url} download
-          >{(post.file.size / 1024).toFixed(2)} KB</a
-        >
-      {:else if post.file.size > 1048576}
-        <a href={post.file.url} download
-          >{(post.file.size / 1048576).toFixed(2)} MB</a
-        >
-      {/if}
+      <br />
+      File: <a href={post.file.url} download>{post.file.filename}</a>
+      ({sizeConverter(post.file.size)})
       <br />
       <video controls>
         <source src={post.file.url} type="video/mp4" />

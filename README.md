@@ -17,7 +17,7 @@
 **TODO**
 
 - [x] Captcha
-- [ ] Threads
+- [x] Threads (still in progress)
 - [ ] admin dashboard
 - [x] able to upload files
 - [ ] Templates for the boards

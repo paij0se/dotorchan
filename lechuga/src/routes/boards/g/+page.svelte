@@ -162,8 +162,7 @@
     {:else if post.file.format === "mp4"}
       <br />
       File: <a href={post.file.url} download>{post.file.filename}</a>
-      ({sizeConverter(post.file.size)}, {post.file.dimensions.width}x{post.file
-        .dimensions.height})
+      ({sizeConverter(post.file.size)})
       <br />
       <video controls>
         <source src={post.file.url} type="video/mp4" />
