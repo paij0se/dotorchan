@@ -137,7 +137,7 @@
   </span>
   <!-- FILE  #########################################################################3 -->
   {#if post.file}
-    {#if post.file.format === "png" || post.file.format === "jpg" || post.file.format === "gif"}
+    {#if post.file.format === "png" || post.file.format === "jpg" || post.file.format === "jpeg" || post.file.format === "gif"}
       <br />
       File: <a href={post.file.url} download>{post.file.filename}</a>
       ({sizeConverter(post.file.size)}, {post.file.dimensions.width}x{post.file

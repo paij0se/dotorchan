@@ -88,8 +88,14 @@ func UploadtoS3(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer file.Close()
-
-	key := fmt.Sprint(rand.Intn(10000000)) + IncomingFile.Name
+	// XD
+	var fileFormat string
+	if filePath[len(filePath)-3:] == "peg" {
+		fileFormat = "jpeg"
+	} else {
+		fileFormat = filePath[len(filePath)-3:]
+	}
+	key := fmt.Sprint(rand.Intn(10000000000000000)) + "." + fileFormat
 
 	// Read the contents of the file into a buffer
 	var buf bytes.Buffer
@@ -118,7 +124,6 @@ func UploadtoS3(w http.ResponseWriter, r *http.Request) {
 		// send the s3 link to the client
 		s3Url := "https://" + bucket + ".s3.amazonaws.com/" + key
 		fileSize := buf.Len()
-		fileFormat := key[len(key)-3:]
 		fmt.Println(getImageDimension(IncomingFile.Name))
 		fmt.Println(s3Url)
 		width, height := getImageDimension(IncomingFile.Name)

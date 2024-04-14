@@ -11,13 +11,13 @@
   const baseURL = url["dotorchan-api"];
   let userUniqueID: any;
   if (browser) {
-    document.title = "/g/ - Technology";
+    document.title = "/qst/ - Quests";
     userUniqueID = localStorage.getItem("user_id");
     const urlParams = new URLSearchParams(window.location.search);
     const threadID = urlParams.get("id");
     console.log(threadID);
     onMount(async () => {
-      fetch(`${baseURL}g/${threadID}`)
+      fetch(`${baseURL}qst/${threadID}`)
         .then((response) => response.json())
         .then((data): ReturnType<() => void> => {
           apiData.set(data);
@@ -36,7 +36,7 @@
 </svelte:head>
 [<a href="/boards/g">Back</a>]
 <div id="center">
-  <h1>/g/ - Technology</h1>
+  <h1>/qst/ - Quests</h1>
 </div>
 
 <hr />

@@ -225,7 +225,6 @@ defmodule Routes.Boards do
           "ip" => Tools.Ip.get(conn),
           "created_at" => DateTime.utc_now() |> DateTime.to_iso8601()
         }
-
         Mongo.update_one(
           c,
           board,

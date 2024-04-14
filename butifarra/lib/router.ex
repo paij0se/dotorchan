@@ -39,6 +39,10 @@ defmodule Dotorchan.Router do
     Routes.Boards.post(conn, "pol")
   end
 
+  post "/api/v1/pol/:id" do
+    Routes.Boards.post_comment_thread(conn, "pol")
+  end
+
   get "/api/v1/pol" do
     Routes.Boards.get_publications(conn, "pol")
   end
@@ -52,6 +56,10 @@ defmodule Dotorchan.Router do
     Routes.Boards.post(conn, "qst")
   end
 
+  post "/api/v1/qst/:id" do
+    Routes.Boards.post_comment_thread(conn, "qst")
+  end
+
   get "/api/v1/qst" do
     Routes.Boards.get_publications(conn, "qst")
   end
@@ -63,6 +71,10 @@ defmodule Dotorchan.Router do
   #########################################################
   post "/api/v1/mu" do
     Routes.Boards.post(conn, "mu")
+  end
+
+  post "/api/v1/mu/:id" do
+    Routes.Boards.post_comment_thread(conn, "mu")
   end
 
   get "/api/v1/mu" do

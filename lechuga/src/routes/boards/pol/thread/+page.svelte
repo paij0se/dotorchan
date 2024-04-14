@@ -11,13 +11,13 @@
   const baseURL = url["dotorchan-api"];
   let userUniqueID: any;
   if (browser) {
-    document.title = "/g/ - Technology";
+    document.title = "/pol/ - Politically Incorrect";
     userUniqueID = localStorage.getItem("user_id");
     const urlParams = new URLSearchParams(window.location.search);
     const threadID = urlParams.get("id");
     console.log(threadID);
     onMount(async () => {
-      fetch(`${baseURL}g/${threadID}`)
+      fetch(`${baseURL}pol/${threadID}`)
         .then((response) => response.json())
         .then((data): ReturnType<() => void> => {
           apiData.set(data);
@@ -34,9 +34,9 @@
     @import url("https://fonts.cdnfonts.com/css/gg-sans-2");
   </style>
 </svelte:head>
-[<a href="/boards/g">Back</a>]
+[<a href="/boards/pol">Back</a>]
 <div id="center">
-  <h1>/g/ - Technology</h1>
+  <h1>/pol/ - Politically Incorrect</h1>
 </div>
 
 <hr />
@@ -50,7 +50,7 @@
     No. {post.post_id}
   </span>
   {#if post.file}
-    {#if post.file.format === "png" || post.file.format === "jpg" || post.file.format === "jpeg" || post.file.format === "gif"}
+    {#if post.file.format === "png" || post.file.format === "jpg" || post.file.format === "gif" || post.file.format === "jpeg"}
       <br />
       File: <a href={post.file.url} download>{post.file.filename}</a>
       ({sizeConverter(post.file.size)}, {post.file.dimensions.width}x{post.file

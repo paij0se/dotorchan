@@ -5,6 +5,7 @@
     apiData,
     boardPosts,
     dateConverter,
+    sizeConverter,
   } from "../../../functions/getposts";
   import { browser } from "$app/environment";
   import { onMount } from "svelte";
@@ -14,11 +15,16 @@
   let fileInput: any;
   let files: any;
   let avatar: any;
+  let userUniqueID: any;
   let fileS3: any;
+  if (browser) {
+    userUniqueID = localStorage.getItem("user_id");
+  }
 
   if (browser) {
     document.title = "/mu/ - Music";
   }
+  console.log(userUniqueID);
   onMount(async () => {
     fetch(baseURL + "mu")
       .then((response) => response.json())
@@ -71,65 +77,73 @@
     @import url("https://fonts.cdnfonts.com/css/gg-sans-2");
   </style>
 </svelte:head>
-<img
-  src="https://media.discordapp.net/attachments/1216124670957326407/1225532039646679202/Brown_Minimalist_Podcast_Promotion_Youtube_Thumbnail-removebg-preview.png?ex=662178a7&is=660f03a7&hm=bc8c6ad0c93ceadb0e8d1acc29ae5668a6f2e7a3bf373dc2dff357c231e0eb41&=&format=webp&quality=lossless&width=832&height=468"
-  alt="logo"
-  id="logo"
-/>
-<button class="upload-btn" on:click={() => (window.location.href = "/")}
-  >back</button
->
+[<a href="/">Home</a>]
+<div id="center">
+  <h1>/mu/ - Music</h1>
+  <details>
+    <summary><span>[</span>Start a New Thread<span>]</span></summary>
+    <input type="text" placeholder="Title (optional)" id="title" />
+    <br />
+    <textarea name="" id="" placeholder="Post to /mu/"></textarea>
+    <div class="container">
+      <input
+        class="hidden"
+        id="file-to-upload"
+        type="file"
+        accept="image/png, image/jpeg, image/gif, video/mp4"
+        bind:files
+        bind:this={fileInput}
+        on:change={() => UploadtoS3(files[0])}
+      />
+      <button class="upload-btn" on:click={() => fileInput.click()}
+        >Upload file</button
+      >
+    </div>
+    <div id="fileName"></div>
+    <br />
+    <button
+      id="post-btn"
+      on:click={async () =>
+        await postToDotorChan(
+          baseURL,
+          fileS3,
+          "mu",
+          `${url["dotochan-aws"]}/captcha`
+        )}>post</button
+    >
 
-<h1>/mu/ - Music</h1>
-<input type="text" placeholder="Title (optional)" id="title" />
-<br />
-<textarea name="" id="" placeholder="Post to /mu/"></textarea>
-<div class="container">
-  <input
-    class="hidden"
-    id="file-to-upload"
-    type="file"
-    bind:files
-    bind:this={fileInput}
-    on:change={() => UploadtoS3(files[0])}
-  />
-  <button class="upload-btn" on:click={() => fileInput.click()}
-    >Upload file</button
-  >
+    <div class="captcha-container">
+      <!-- svelte-ignore a11y-missing-attribute -->
+      <img id="captcha" src="" />
+      <input
+        type="text"
+        id="captcha-input"
+        placeholder="TYPE THE CAPTCHA HERE"
+      />
+      <button class="upload-btn" id="verify">verify</button>
+    </div>
+  </details>
 </div>
-<div id="fileName"></div>
-<br />
-<button
-  id="post-btn"
-  on:click={async () =>
-    await postToDotorChan(
-      baseURL,
-      fileS3,
-      "mu",
-      `${url["dotochan-aws"]}/captcha`
-    )}>post</button
->
-
-<div class="captcha-container">
-  <!-- svelte-ignore a11y-missing-attribute -->
-  <img id="captcha" src="" />
-  <input type="text" id="captcha-input" placeholder="TYPE THE CAPTCHA HERE" />
-  <button class="upload-btn" id="verify">verify</button>
-</div>
-
-<h1>Posts</h1>
 <hr />
 {#each $boardPosts as post}
-  {#if post.title}
-    <h2>{post.title}</h2>
-  {/if}
-  <p>{post.content}</p>
+  <span>
+    {#if post.title}
+      <span id="title-post">{post.title}</span>
+    {/if}
+    <span id="anon">Anonymous @{post.user_id}</span>
+    {dateConverter(post.created_at)}
+    No. {post.post_id}
+    [<a href={"/boards/mu/thread?id=" + post.post_id}>Reply</a>]
+  </span>
+  <!-- FILE  #########################################################################3 -->
   {#if post.file}
-    {#if post.file.format === "png" || post.file.format === "jpg" || post.file.format === "gif"}
+    {#if post.file.format === "png" || post.file.format === "jpg" || post.file.format === "jpeg" || post.file.format === "gif"}
+      <br />
+      File: <a href={post.file.url} download>{post.file.filename}</a>
+      ({sizeConverter(post.file.size)}, {post.file.dimensions.width}x{post.file
+        .dimensions.height})
+
       {#if (post.file.dimensions.height > 500 && post.file.dimensions.height < 1080) || (post.file.dimensions.width > 500 && post.file.dimensions.width <= 1920)}
-        <a href={post.file.url} download
-          >{post.file.dimensions.width}x{post.file.dimensions.height}</a
-        >
         <br />
         <img
           src={post.file.url}
@@ -138,44 +152,25 @@
           height={post.file.dimensions.height / 2}
         />
       {:else if post.file.dimensions.height > 1080 || post.file.dimensions.width > 1920}
-        <a href={post.file.url} download
-          >{post.file.dimensions.width}x{post.file.dimensions.height}</a
-        >
         <br />
         <img src={post.file.url} alt="file" width="680" height="420" />
       {:else}
-        <a href={post.file.url} download>{post.file.filename}</a>
         <br />
         <img src={post.file.url} alt="file" />
       {/if}
+      <!-- VIDEO #########################################################################3 -->
     {:else if post.file.format === "mp4"}
-      {#if post.file.size > 1024 && post.file.size < 1048576}
-        <a href={post.file.url} download
-          >{(post.file.size / 1024).toFixed(2)}} KB</a
-        >
-      {:else if post.file.size > 1048576}
-        <a href={post.file.url} download
-          >{(post.file.size / 1048576).toFixed(2)} MB</a
-        >
-      {/if}
+      <br />
+      File: <a href={post.file.url} download>{post.file.filename}</a>
+      ({sizeConverter(post.file.size)})
       <br />
       <video controls>
         <source src={post.file.url} type="video/mp4" />
         <track kind="captions" />
       </video>
-    {:else}
-      <a href={post.file.url} download>{post.file.filename}</a>
-      {#if post.file.size > 1024 && post.file.size < 1048576}
-        <p>{(post.file.size / 1024).toFixed(2)} KB</p>
-      {:else if post.file.size > 1048576}
-        <p>{(post.file.size / 1048576).toFixed(2)} MB</p>
-      {:else}
-        <p>{post.file.size} B</p>
-      {/if}
     {/if}
   {/if}
-  <p>{dateConverter(post.created_at)}</p>
-  <p>Anon: @{post.user_id}</p>
+  <p>{post.content}</p>
   <hr />
 {/each}
 <footer>
