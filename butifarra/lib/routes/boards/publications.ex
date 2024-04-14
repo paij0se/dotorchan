@@ -225,23 +225,35 @@ defmodule Routes.Boards do
           "ip" => Tools.Ip.get(conn),
           "created_at" => DateTime.utc_now() |> DateTime.to_iso8601()
         }
-        Mongo.update_one(
-          c,
-          board,
-          %{"post_id" => post_id},
-          %{
-            "$push" => %{
-              "comments" => for_the_database
+
+        {:ok, %Mongo.UpdateResult{matched_count: matched_count}} =
+          Mongo.update_one(
+            c,
+            board,
+            %{
+              "post_id" => post_id
+            },
+            %{
+              "$push" => %{
+                "comments" => for_the_database
+              }
             }
-          }
-        )
-        |> IO.inspect(label: "insert")
-# curl -X POST -H "Content-Type: application/json" -d '{"content":"test"}' http://192.168.1.8:8080/api/v1/g/d72440767818
-        send_resp(
-          conn |> put_resp_content_type("application/json"),
-          200,
-          Jason.encode!(response)
-        )
+          )
+          |> IO.inspect(label: "insert")
+
+        if matched_count == 0 do
+          send_resp(
+            conn |> put_resp_content_type("application/json"),
+            404,
+            Jason.encode!(%{"error" => "post not found"})
+          )
+        else
+          send_resp(
+            conn |> put_resp_content_type("application/json"),
+            200,
+            Jason.encode!(response)
+          )
+        end
     end
   end
 end
