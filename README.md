@@ -3,7 +3,8 @@
 ![Screenshot from 2024-04-13 16-21-18](https://github.com/paij0se/dotorchan/assets/156923829/ef0d8f92-f24a-4a34-a5fc-64dc9e7735a9)
 
 # Showcase
-![image](https://github.com/paij0se/dotorchan/assets/156923829/b3aa60cc-5326-4f83-a2f0-d251e4f091cd)
+![image](https://github.com/paij0se/dotorchan/assets/156923829/0069ec7d-3446-414b-a32b-d660b2839f6d)
+
 
 
 ## Structure
