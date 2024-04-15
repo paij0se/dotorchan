@@ -4,10 +4,9 @@
     document.title = "404 - Not Found";
   }
   const images: string[] = [
-    "../src/images/404-Anonymous-3.png",
-    "../src/images/404-Anonymous-5.png",
-    "../src/images/404-Anonymous-6.png",
-    "../src/images/404-Anonymous.jpg",
+    "https://dotorchan.s3.amazonaws.com/static+files/404-Anonymous.jpg",
+    "https://dotorchan.s3.amazonaws.com/static+files/404-Anonymous-5.png",
+    "https://dotorchan.s3.amazonaws.com/static+files/404-Anonymous-6.png",
   ];
   const randomImage = images[Math.floor(Math.random() * images.length)];
 </script>
@@ -34,7 +33,9 @@
     height: 100vh;
   }
   :global(body) {
-    background: #ffe url("../src/images/fade.png") top repeat-x;
+    background: #ffe
+      url("https://dotorchan.s3.amazonaws.com/static+files/fade.png") top
+      repeat-x;
     color: #800;
   }
 </style>

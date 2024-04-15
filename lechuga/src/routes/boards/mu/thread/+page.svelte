@@ -5,6 +5,7 @@
     dateConverter,
     sizeConverter,
   } from "../../../../functions/getposts";
+  import { postReply } from "../../../../functions/post";
   import { browser } from "$app/environment";
   import { onMount } from "svelte";
   import url from "../../../../services.json";
@@ -37,6 +38,13 @@
 [<a href="/boards/mu">Back</a>]
 <div id="center">
   <h1>/mu/ - Music</h1>
+  <details>
+    <summary><span>[</span>Post a Reply<span>]</span></summary>
+    <textarea name="" id=""></textarea>
+    <br />
+    <button id="post-btn" on:click={() => postReply(baseURL, "mu")}>Post</button
+    >
+  </details>
 </div>
 
 <hr />
@@ -111,48 +119,5 @@
 </footer>
 
 <style>
-  .comment {
-    background-color: #f0e0d6;
-    border: 1px solid #d9bfb7;
-    border-left: none;
-    border-top: none;
-    display: table;
-    padding: 2px;
-  }
-  #separator {
-    color: #e0bfb7;
-    float: left;
-    margin-right: 2px;
-    margin-top: 0;
-    margin-left: 2px;
-  }
-  #title-post {
-    color: #cc1105;
-    font-weight: 700;
-  }
-  video {
-    width: auto;
-    height: auto;
-    max-width: 100%;
-  }
-  footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: "gg sans normal";
-  }
-  #anon {
-    color: #117743;
-    font-weight: 700;
-  }
-  :global(body) {
-    background: #ffe url("../src/images/fade.png") top repeat-x;
-    color: #800;
-    font-family: "gg sans Normal";
-  }
-  #center {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+  @import "../../../../style-replies.css";
 </style>

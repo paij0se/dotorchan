@@ -64,7 +64,9 @@
 
 <style>
   :global(body) {
-    background: #ffe url("../images/fade.png") top repeat-x;
+    background: #ffe
+      url("https://dotorchan.s3.amazonaws.com/static+files/fade.png") top
+      repeat-x;
     color: #800;
     font-family: "gg sans Normal";
   }

@@ -4,6 +4,41 @@ export interface PostToS3 {
   size: number;
   url: string;
 }
+export function postReply(baseURL: string, board: string) {
+  const urlParams = new URLSearchParams(window.location.search);
+  const threadID = urlParams.get("id");
+  const textarea = document.querySelector("textarea") as HTMLTextAreaElement;
+  if (textarea.value.trim() == "" || textarea.value.length < 1) {
+    alert("Content can't be empty");
+    window.location.reload();
+    return;
+  }
+  if (textarea.value.length > 200) {
+    alert("Content is too long");
+    window.location.reload();
+    return;
+  }
+  const postBtn = document.getElementById("post-btn") as HTMLButtonElement;
+  postBtn.disabled = true;
+  const data = {
+    content: textarea.value,
+  };
+  fetch(`${baseURL}${board}/${threadID}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      window.location.reload();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
 export async function postToDotorChan(
   baseURL: string,
   fileS3: string,
