@@ -21,7 +21,7 @@
 - [x] Threads (still in progress)
 - [ ] admin dashboard
 - [x] able to upload files
-- [ ] Templates for the boards
+- [ ] Templates for the boards (with components)
 
 # Run with Docker
 
