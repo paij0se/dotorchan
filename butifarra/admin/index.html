@@ -29,8 +29,6 @@
         event.preventDefault(); // Prevent the form from submitting normally
         const id = document.getElementById("user_id").value;
         const board = document.getElementById("board").value;
-        // id only can be a number
-        console.log(id)
      
         const url = location.origin + "/admin/delete";
         fetch(url, {
@@ -42,7 +40,6 @@
         })
           .then((response) => response.json())
           .then((data) => {
-            console.log("Success:", data);
             document.getElementById("result").innerText = data.status;
           });
       });

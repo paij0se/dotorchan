@@ -4,7 +4,9 @@
     boardPosts,
     dateConverter,
     sizeConverter,
+    safeTextWithLineBreaks,
   } from "../../../../functions/getposts";
+  import type { Post } from "../../../../functions/getposts";
   import { postReply } from "../../../../functions/post";
   import { browser } from "$app/environment";
   import { onMount } from "svelte";
@@ -12,16 +14,16 @@
   const baseURL = url["dotorchan-api"];
   let userUniqueID: any;
   if (browser) {
-    document.title = "/g/ - Technology";
     userUniqueID = localStorage.getItem("user_id");
     const urlParams = new URLSearchParams(window.location.search);
     const threadID = urlParams.get("id");
-    console.log(threadID);
     onMount(async () => {
       fetch(`${baseURL}g/${threadID}`)
         .then((response) => response.json())
         .then((data): ReturnType<() => void> => {
           apiData.set(data);
+          const d = data[0] as Post;
+          document.title = d.title ? `/g/ - ${d.title}` : `/g/ - ${d.content}`;
         })
         .catch((_) => {
           window.location.href = "/404";
@@ -90,7 +92,7 @@
       </video>
     {/if}
   {/if}
-  <p>{post.content}</p>
+  <p>{@html safeTextWithLineBreaks(post.content)}</p>
   <br />
   <!-- Comments ############################################################################ -->
   {#if post.comments}
@@ -102,7 +104,7 @@
           {dateConverter(comment.created_at)}
           No. {comment.comment_id}
         </span>
-        <p>{comment.content}</p>
+        <p>{@html safeTextWithLineBreaks(comment.content)}</p>
       </div>
       <br />
     {/each}

@@ -6,6 +6,7 @@
     boardPosts,
     dateConverter,
     sizeConverter,
+    safeTextWithLineBreaks,
   } from "../../../functions/getposts";
   import { browser } from "$app/environment";
   import { onMount } from "svelte";
@@ -24,7 +25,6 @@
   if (browser) {
     document.title = "/g/ - Technology";
   }
-  console.log(userUniqueID);
   onMount(async () => {
     fetch(baseURL + "g")
       .then((response) => response.json())
@@ -170,7 +170,28 @@
       </video>
     {/if}
   {/if}
-  <p>{post.content}</p>
+  <p>{@html safeTextWithLineBreaks(post.content)}</p>
+  <hr />
+  <!-- Comments ############################################################################ -->
+  {#if post.comments}
+    {#each post.comments.slice(0, 10) as comment}
+      <p id="separator">>></p>
+      <div class="comment">
+        <span>
+          <span id="anon">Anonymous @{comment.user_id}</span>
+          {dateConverter(comment.created_at)}
+          No.
+          <a
+            id="replies"
+            title="Reply to this post"
+            href={"/boards/g/thread?id=" + post.post_id}>{comment.comment_id}</a
+          >
+        </span>
+        <p>{@html safeTextWithLineBreaks(comment.content)}</p>
+      </div>
+      <br />
+    {/each}
+  {/if}
   <hr />
 {/each}
 <footer>
@@ -183,4 +204,8 @@
 
 <style>
   @import "../../../style.css";
+  #replies {
+    color: #880000;
+    text-decoration: none;
+  }
 </style>

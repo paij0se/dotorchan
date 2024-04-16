@@ -1,6 +1,12 @@
 import { writable, derived } from "svelte/store";
-interface Post {
-  comments: string[] | string
+interface Comment {
+  comment_id: string;
+  content: string;
+  created_at: string;
+  user_id: string;
+}
+export interface Post {
+  comments: Comment[];
   user_id: string;
   post_id: string;
   content: string;
@@ -16,6 +22,17 @@ interface Post {
     url: string;
     size: number;
   };
+}
+export function safeTextWithLineBreaks(text: string) {
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML
+    .replace(/\n/g, "<br />") // space lines
+    .replace(/```(.*?)```/g, "<code>$1</code>") // code blocks
+    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // bold
+    .replace(/\*(.*?)\*/g, "<em>$1</em>") // italic
+    .replace(/__(.*?)__/g, "<u>$1</u>") // underline
+    .replace(/~~(.*?)~~/g, "<del>$1</del>"); // strikethrough
 }
 export const apiData = writable([]);
 
@@ -35,16 +52,6 @@ export function dateConverter(date: string) {
   });
 }
 
-/*
-{#if post.file.size > 1024 && post.file.size < 1048576}
-        <a href={post.file.url} download
-          >{(post.file.size / 1024).toFixed(2)} KB</a
-        >
-      {:else if post.file.size > 1048576}
-        <a href={post.file.url} download
-          >{(post.file.size / 1048576).toFixed(2)} MB</a
-        >
-*/
 export function sizeConverter(size: number) {
   if (size > 1024 && size < 1048576) {
     return (size / 1024).toFixed(2) + " KB";

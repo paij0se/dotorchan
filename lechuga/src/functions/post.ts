@@ -13,7 +13,7 @@ export function postReply(baseURL: string, board: string) {
     window.location.reload();
     return;
   }
-  if (textarea.value.length > 200) {
+  if (textarea.value.length > 40000) {
     alert("Content is too long");
     window.location.reload();
     return;
@@ -31,12 +31,8 @@ export function postReply(baseURL: string, board: string) {
     body: JSON.stringify(data),
   })
     .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
+    .then((_) => {
       window.location.reload();
-    })
-    .catch((error) => {
-      console.error("Error:", error);
     });
 }
 export async function postToDotorChan(
@@ -55,7 +51,7 @@ export async function postToDotorChan(
     return;
   }
 
-  if (content.length > 8000 || content.length < 1) {
+  if (content.length > 40000 || content.length < 1) {
     alert("Content is too long or too short");
     location.reload();
     return;
@@ -75,7 +71,6 @@ export async function postToDotorChan(
       "captcha-input"
     ) as HTMLInputElement;
     const captchaValue = captchaInput.value;
-    console.log(captchaValue);
     if (captchaValue.length < 6) {
       alert("Captcha is too short");
       return;
@@ -89,7 +84,6 @@ export async function postToDotorChan(
     })
       .then((response) => response.json())
       .then(async (data) => {
-        console.log(data);
         if (data == false) {
           alert("Captcha is incorrect");
           location.reload();
