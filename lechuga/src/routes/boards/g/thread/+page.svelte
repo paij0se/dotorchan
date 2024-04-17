@@ -5,6 +5,7 @@
     dateConverter,
     sizeConverter,
     safeTextWithLineBreaks,
+    RandomBanner,
   } from "../../../../functions/getposts";
   import type { Post } from "../../../../functions/getposts";
   import type { PostToS3 } from "../../../../functions/post";
@@ -78,6 +79,7 @@
 </svelte:head>
 [<a href="/boards/g">Back</a>]
 <div id="center">
+  <img src={RandomBanner()} alt="banner" />
   <h1>/g/ - Technology</h1>
   <details>
     <summary><span>[</span>Post a Reply<span>]</span></summary>

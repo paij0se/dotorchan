@@ -7,6 +7,7 @@
     dateConverter,
     sizeConverter,
     safeTextWithLineBreaks,
+    RandomBanner,
   } from "../../../functions/getposts";
   import { browser } from "$app/environment";
   import { onMount } from "svelte";
@@ -69,17 +70,6 @@
         }
       }
     };
-  }
-  function RandomBanner(): string {
-    const images: string[] = [
-      "https://dotorchan.s3.amazonaws.com/static+files/board-titles/1.gif",
-      "https://dotorchan.s3.amazonaws.com/static+files/board-titles/2.gif",
-      "https://dotorchan.s3.amazonaws.com/static+files/board-titles/3.gif",
-      "https://dotorchan.s3.amazonaws.com/static+files/board-titles/4.gif",
-      "https://dotorchan.s3.amazonaws.com/static+files/board-titles/5.gif",
-      "https://dotorchan.s3.amazonaws.com/static+files/board-titles/6.gif",
-    ];
-    return images[Math.floor(Math.random() * images.length)];
   }
 </script>
 

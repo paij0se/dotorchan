@@ -62,7 +62,17 @@ export function dateConverter(date: string) {
     hour12: true,
   });
 }
-
+export function RandomBanner(): string {
+  const images: string[] = [
+    "https://dotorchan.s3.amazonaws.com/static+files/board-titles/1.gif",
+    "https://dotorchan.s3.amazonaws.com/static+files/board-titles/2.gif",
+    "https://dotorchan.s3.amazonaws.com/static+files/board-titles/3.gif",
+    "https://dotorchan.s3.amazonaws.com/static+files/board-titles/4.gif",
+    "https://dotorchan.s3.amazonaws.com/static+files/board-titles/5.gif",
+    "https://dotorchan.s3.amazonaws.com/static+files/board-titles/6.gif",
+  ];
+  return images[Math.floor(Math.random() * images.length)];
+}
 export function sizeConverter(size: number) {
   if (size > 1024 && size < 1048576) {
     return (size / 1024).toFixed(2) + " KB";
