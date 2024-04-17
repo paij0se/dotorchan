@@ -1,5 +1,5 @@
 # Showcase
-![Diseño sin título (1)](https://github.com/paij0se/dotorchan/assets/156923829/a8a0fd09-c535-4758-800d-6acbf4332248)
+![Diseño sin título (2)](https://github.com/paij0se/dotorchan/assets/156923829/b95c04c3-3e42-443c-a36a-0ebd0c308ef4)
 
 
 ## Structure
