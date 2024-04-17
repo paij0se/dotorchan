@@ -1,6 +1,5 @@
 <script lang="ts">
   import services from "../services.json";
-  import { Router, Route } from "svelte-routing";
   const baseURL = services["dotorchan-api"];
   const s3URL = services["dotochan-aws"];
   const url = baseURL + "stats";

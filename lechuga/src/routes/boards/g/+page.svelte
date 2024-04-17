@@ -70,6 +70,17 @@
       }
     };
   }
+  function RandomBanner(): string {
+    const images: string[] = [
+      "https://dotorchan.s3.amazonaws.com/static+files/board-titles/1.gif",
+      "https://dotorchan.s3.amazonaws.com/static+files/board-titles/2.gif",
+      "https://dotorchan.s3.amazonaws.com/static+files/board-titles/3.gif",
+      "https://dotorchan.s3.amazonaws.com/static+files/board-titles/4.gif",
+      "https://dotorchan.s3.amazonaws.com/static+files/board-titles/5.gif",
+      "https://dotorchan.s3.amazonaws.com/static+files/board-titles/6.gif",
+    ];
+    return images[Math.floor(Math.random() * images.length)];
+  }
 </script>
 
 <svelte:head>
@@ -79,6 +90,7 @@
 </svelte:head>
 [<a href="/">Home</a>]
 <div id="center">
+  <img src={RandomBanner()} alt="banner" />
   <h1>/g/ - Technology</h1>
   <details>
     <summary><span>[</span>Start a New Thread<span>]</span></summary>
