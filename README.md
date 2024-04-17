@@ -4,6 +4,11 @@
 
 ![Screenshot from 2024-04-16 21-37-56](https://github.com/paij0se/dotorchan/assets/156923829/ef8821f1-3cba-4e40-9cc6-0ac68ab148a5)
 
+# Threads
+
+![image](https://github.com/paij0se/dotorchan/assets/156923829/71a9e730-e75b-4334-8c83-153f5cc09a96)
+
+
 ## Structure
 
 | Codebase              |      Description          |
