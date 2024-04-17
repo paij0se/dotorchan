@@ -60,7 +60,14 @@ span {
 .hidden {
   display: none;
 }
-
+#blockquote {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 40px;
+  margin-inline-end: 40px;
+  unicode-bidi: isolate;
+}
 .upload-btn {
   width: 128px;
   height: 32px;

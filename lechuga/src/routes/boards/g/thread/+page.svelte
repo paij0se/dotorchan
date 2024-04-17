@@ -7,12 +7,18 @@
     safeTextWithLineBreaks,
   } from "../../../../functions/getposts";
   import type { Post } from "../../../../functions/getposts";
+  import type { PostToS3 } from "../../../../functions/post";
   import { postReply } from "../../../../functions/post";
   import { browser } from "$app/environment";
   import { onMount } from "svelte";
   import url from "../../../../services.json";
   const baseURL = url["dotorchan-api"];
+  const s3URL = url["dotochan-aws"];
   let userUniqueID: any;
+  let fileInput: any;
+  let files: any;
+  let avatar: any;
+  let fileS3: any;
   if (browser) {
     userUniqueID = localStorage.getItem("user_id");
     const urlParams = new URLSearchParams(window.location.search);
@@ -30,6 +36,39 @@
         });
     });
   }
+  function UploadtoS3(image: Blob) {
+    let avatar: any;
+    const reader = new FileReader();
+    reader.readAsDataURL(image);
+    reader.onload = async (e) => {
+      if (e.target) {
+        avatar = e.target.result;
+        if (typeof e.target.result === "string") {
+          const imgData = e.target.result.split(",");
+          const data = { image: imgData[1] };
+          if (imgData[1].length > 26214400) {
+            alert("File is too large, max size is 25MB");
+            return;
+          }
+          const res = await fetch(s3URL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: files[0].name,
+              data: data["image"],
+            }),
+          });
+          const s3Url: PostToS3 = await res.json();
+          fileS3 = s3Url;
+          if (browser) {
+            document.getElementById("fileName")!.innerText = files[0].name;
+          }
+        }
+      }
+    };
+  }
 </script>
 
 <svelte:head>
@@ -43,8 +82,24 @@
   <details>
     <summary><span>[</span>Post a Reply<span>]</span></summary>
     <textarea name="" id=""></textarea>
+    <div class="container">
+      <input
+        class="hidden"
+        type="file"
+        accept="image/png, image/jpeg, image/gif, video/mp4"
+        bind:files
+        bind:this={fileInput}
+        on:change={() => UploadtoS3(files[0])}
+      />
+      <button class="upload-btn" on:click={() => fileInput.click()}
+        >Upload file</button
+      >
+    </div>
+    <div id="fileName"></div>
     <br />
-    <button id="post-btn" on:click={() => postReply(baseURL, "g")}>Post</button>
+    <button id="post-btn" on:click={() => postReply(baseURL, "g", fileS3)}
+      >Post</button
+    >
   </details>
 </div>
 
@@ -104,7 +159,48 @@
           {dateConverter(comment.created_at)}
           No. {comment.comment_id}
         </span>
-        <p>{@html safeTextWithLineBreaks(comment.content)}</p>
+        <div id="blockquote">
+          <p>{@html safeTextWithLineBreaks(comment.content)}</p>
+
+          {#if comment.file}
+            {#if comment.file.format === "png" || comment.file.format === "jpg" || comment.file.format === "jpeg" || comment.file.format === "gif"}
+              File:
+              <a href={comment.file.url} download>{comment.file.filename}</a>
+              ({sizeConverter(comment.file.size)}, {comment.file.dimensions
+                .width}x{comment.file.dimensions.height})
+              {#if (comment.file.dimensions.height > 500 && comment.file.dimensions.height < 1080) || (comment.file.dimensions.width > 500 && comment.file.dimensions.width <= 1920)}
+                <br />
+                <img
+                  src={comment.file.url}
+                  alt="file"
+                  width={comment.file.dimensions.width / 2}
+                  height={comment.file.dimensions.height / 2}
+                />
+              {:else if comment.file.dimensions.height > 1080 || comment.file.dimensions.width > 1920}
+                <br />
+                <img
+                  src={comment.file.url}
+                  alt="file"
+                  width="680"
+                  height="420"
+                />
+              {:else}
+                <br />
+                <img src={comment.file.url} alt="file" />
+              {/if}
+              <!-- VIDEO #########################################################################3 -->
+            {:else if comment.file.format === "mp4"}
+              File:
+              <a href={comment.file.url} download>{comment.file.filename}</a>
+              ({sizeConverter(comment.file.size)})
+              <br />
+              <video controls>
+                <source src={comment.file.url} type="video/mp4" />
+                <track kind="captions" />
+              </video>
+            {/if}
+          {/if}
+        </div>
       </div>
       <br />
     {/each}

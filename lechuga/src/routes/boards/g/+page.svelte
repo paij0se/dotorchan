@@ -88,7 +88,6 @@
     <div class="container">
       <input
         class="hidden"
-        id="file-to-upload"
         type="file"
         accept="image/png, image/jpeg, image/gif, video/mp4"
         bind:files
@@ -187,7 +186,47 @@
             href={"/boards/g/thread?id=" + post.post_id}>{comment.comment_id}</a
           >
         </span>
-        <p>{@html safeTextWithLineBreaks(comment.content)}</p>
+        <div id="blockquote">
+          <p>{@html safeTextWithLineBreaks(comment.content)}</p>
+          {#if comment.file}
+            {#if comment.file.format === "png" || comment.file.format === "jpg" || comment.file.format === "jpeg" || comment.file.format === "gif"}
+              File:
+              <a href={comment.file.url} download>{comment.file.filename}</a>
+              ({sizeConverter(comment.file.size)}, {comment.file.dimensions
+                .width}x{comment.file.dimensions.height})
+              {#if (comment.file.dimensions.height > 500 && comment.file.dimensions.height < 1080) || (comment.file.dimensions.width > 500 && comment.file.dimensions.width <= 1920)}
+                <br />
+                <img
+                  src={comment.file.url}
+                  alt="file"
+                  width={comment.file.dimensions.width / 2}
+                  height={comment.file.dimensions.height / 2}
+                />
+              {:else if comment.file.dimensions.height > 1080 || comment.file.dimensions.width > 1920}
+                <br />
+                <img
+                  src={comment.file.url}
+                  alt="file"
+                  width="680"
+                  height="420"
+                />
+              {:else}
+                <br />
+                <img src={comment.file.url} alt="file" />
+              {/if}
+              <!-- VIDEO #########################################################################3 -->
+            {:else if comment.file.format === "mp4"}
+              File:
+              <a href={comment.file.url} download>{comment.file.filename}</a>
+              ({sizeConverter(comment.file.size)})
+              <br />
+              <video controls>
+                <source src={comment.file.url} type="video/mp4" />
+                <track kind="captions" />
+              </video>
+            {/if}
+          {/if}
+        </div>
       </div>
       <br />
     {/each}

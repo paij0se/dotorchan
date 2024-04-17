@@ -13,9 +13,35 @@
   margin-top: 0;
   margin-left: 2px;
 }
+#blockquote {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 40px;
+  margin-inline-end: 40px;
+  unicode-bidi: isolate;
+}
 #title-post {
   color: #cc1105;
   font-weight: 700;
+}
+.upload-btn {
+  width: 128px;
+  height: 32px;
+  background-color: black;
+  font-family: "gg sans normal";
+  color: white;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.hidden {
+  display: none;
+}
+.container {
+  display: flex;
+  flex-direction: column;
 }
 video {
   width: auto;

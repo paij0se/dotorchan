@@ -4,7 +4,12 @@ export interface PostToS3 {
   size: number;
   url: string;
 }
-export function postReply(baseURL: string, board: string) {
+/////////////////////////////////////////////////////////////////
+export function postReply(
+  baseURL: string,
+  board: string,
+  fileToUpload: string
+) {
   const urlParams = new URLSearchParams(window.location.search);
   const threadID = urlParams.get("id");
   const textarea = document.querySelector("textarea") as HTMLTextAreaElement;
@@ -22,6 +27,7 @@ export function postReply(baseURL: string, board: string) {
   postBtn.disabled = true;
   const data = {
     content: textarea.value,
+    file: fileToUpload,
   };
   fetch(`${baseURL}${board}/${threadID}`, {
     method: "POST",
@@ -35,6 +41,7 @@ export function postReply(baseURL: string, board: string) {
       window.location.reload();
     });
 }
+/////////////////////////////////////////////////////////////////
 export async function postToDotorChan(
   baseURL: string,
   fileS3: string,

@@ -184,6 +184,15 @@ defmodule Routes.Boards do
           ""
       end
 
+    file =
+      case conn.body_params do
+        %{"file" => a_file} ->
+          a_file
+
+        _ ->
+          ""
+      end
+
     case content do
       "" ->
         send_resp(
@@ -215,7 +224,8 @@ defmodule Routes.Boards do
           "user_id" => user_id,
           "comment_id" => comment_id,
           "content" => content,
-          "created_at" => DateTime.utc_now() |> DateTime.to_iso8601()
+          "created_at" => DateTime.utc_now() |> DateTime.to_iso8601(),
+          "file" => file
         }
 
         for_the_database = %{
@@ -223,7 +233,8 @@ defmodule Routes.Boards do
           "comment_id" => comment_id,
           "content" => content,
           "ip" => Tools.Ip.get(conn),
-          "created_at" => DateTime.utc_now() |> DateTime.to_iso8601()
+          "created_at" => DateTime.utc_now() |> DateTime.to_iso8601(),
+          "file" => file
         }
 
         {:ok, %Mongo.UpdateResult{matched_count: matched_count}} =

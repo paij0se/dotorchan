@@ -1,9 +1,20 @@
 import { writable, derived } from "svelte/store";
+interface CommentFile {
+  filename: string;
+  dimensions: {
+    width: number;
+    height: number;
+  };
+  format: string;
+  url: string;
+  size: number;
+}
 interface Comment {
   comment_id: string;
   content: string;
   created_at: string;
   user_id: string;
+  file: CommentFile;
 }
 export interface Post {
   comments: Comment[];
