@@ -1,6 +1,8 @@
 # Showcase
-![Diseño sin título (2)](https://github.com/paij0se/dotorchan/assets/156923829/b95c04c3-3e42-443c-a36a-0ebd0c308ef4)
 
+![Screenshot from 2024-04-16 21-37-49](https://github.com/paij0se/dotorchan/assets/156923829/906d7afb-0cd8-46ac-8983-f8d75b99a259)
+
+![Screenshot from 2024-04-16 21-37-56](https://github.com/paij0se/dotorchan/assets/156923829/ef8821f1-3cba-4e40-9cc6-0ac68ab148a5)
 
 ## Structure
 
