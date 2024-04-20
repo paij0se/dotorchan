@@ -3,18 +3,20 @@
   if (browser) {
     document.title = "404 - Not Found";
   }
-  const images: string[] = [
-    "https://dotorchan.s3.amazonaws.com/static+files/404-Anonymous.jpg",
-    "https://dotorchan.s3.amazonaws.com/static+files/404-Anonymous-5.png",
-    "https://dotorchan.s3.amazonaws.com/static+files/404-Anonymous-6.png",
-  ];
-  const randomImage = images[Math.floor(Math.random() * images.length)];
+  function randomImage(): string {
+    const images: string[] = [
+      "https://dotorchan.s3.amazonaws.com/static+files/404-Anonymous.jpg",
+      "https://dotorchan.s3.amazonaws.com/static+files/404-Anonymous-5.png",
+      "https://dotorchan.s3.amazonaws.com/static+files/404-Anonymous-6.png",
+    ];
+    return images[Math.floor(Math.random() * images.length)];
+  }
 </script>
 
 <h1>404 - Not Found</h1>
 <button on:click={() => (window.location.href = "/")}>Go back home</button>
 <div id="c">
-  <img src={randomImage} alt="logo" id="logo" />
+  <img src={randomImage()} alt="logo" id="logo" />
 </div>
 
 <style>

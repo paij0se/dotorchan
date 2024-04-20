@@ -1,4 +1,9 @@
 import { writable, derived } from "svelte/store";
+import { onMount } from "svelte";
+import url from "../services.json";
+import { checkWhatBoardIs } from "./post";
+const baseURL = url["dotorchan-api"];
+
 interface CommentFile {
   filename: string;
   dimensions: {
@@ -81,4 +86,17 @@ export function sizeConverter(size: number) {
   } else {
     return size + " B";
   }
+}
+export function GetPosts() {
+  onMount(async () => {
+    fetch(baseURL + checkWhatBoardIs())
+      .then((response) => response.json())
+      .then((data): ReturnType<() => void> => {
+        apiData.set(data);
+      })
+      .catch((error) => {
+        console.log(error);
+        return [];
+      });
+  });
 }

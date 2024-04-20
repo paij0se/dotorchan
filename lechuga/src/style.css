@@ -18,6 +18,10 @@ textarea {
   width: 250px;
   height: 150px;
 }
+#replies {
+  color: #880000;
+  text-decoration: none;
+}
 #anon {
   color: #117743;
   font-weight: 700;

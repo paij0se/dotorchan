@@ -1,3 +1,65 @@
+import { browser } from "$app/environment";
+import url from "../services.json";
+import { apiData } from "../functions/getposts";
+import { onMount } from "svelte";
+import type { Post } from "../functions/getposts";
+const baseURL = url["dotorchan-api"];
+
+export function checkWhatBoardIs(): string {
+  if (browser === false) return "";
+  let board: string = "";
+  if (
+    window.location.pathname === "/boards/g" ||
+    window.location.pathname === "/boards/g/thread"
+  ) {
+    board = "g";
+  } else if (
+    window.location.pathname === "/boards/a" ||
+    window.location.pathname === "/boards/a/thread"
+  ) {
+    board = "a";
+  } else if (
+    window.location.pathname === "/boards/pol" ||
+    window.location.pathname === "/boards/pol/thread"
+  ) {
+    board = "pol";
+  }
+  return board;
+}
+export function putH1() {
+  const board = checkWhatBoardIs();
+  switch (board) {
+    case "g":
+      document.title = "/g/ - Technology";
+      return "/g/ - Technology";
+    case "pol":
+      document.title = "/pol/ - Politically Incorrect";
+      return "/pol/ - Politically Incorrect";
+    case "a":
+      document.title = "/a/ - Anime & Manga";
+      return "/a/ - Anime & Manga";
+  }
+}
+export function PostReplyIdk() {
+  if (browser) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const threadID = urlParams.get("id");
+    onMount(async () => {
+      fetch(`${baseURL}${checkWhatBoardIs()}/${threadID}`)
+        .then((response) => response.json())
+        .then((data): ReturnType<() => void> => {
+          apiData.set(data);
+          const d = data[0] as Post;
+          document.title = d.title
+            ? `/${checkWhatBoardIs()}/ - ${d.title}`
+            : `/${checkWhatBoardIs()}/ - ${d.content}`;
+        })
+        .catch((_) => {
+          window.location.href = "/404";
+        });
+    });
+  }
+}
 export interface PostToS3 {
   filename: string;
   format: string;

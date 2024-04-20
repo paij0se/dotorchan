@@ -41,20 +41,16 @@
   </style>
 </svelte:head>
 <img
-  src="https://media.discordapp.net/attachments/1216124670957326407/1225532039646679202/Brown_Minimalist_Podcast_Promotion_Youtube_Thumbnail-removebg-preview.png?ex=662178a7&is=660f03a7&hm=bc8c6ad0c93ceadb0e8d1acc29ae5668a6f2e7a3bf373dc2dff357c231e0eb41&=&format=webp&quality=lossless&width=832&height=468"
+  src="https://dotorchan.s3.amazonaws.com/static+files/Brown_Minimalist_Podcast_Promotion_Youtube_Thumbnail-removebg-preview.png"
   alt="logo"
 />
-
 <br />
-
 <div id="boards">
   <h2>Boards</h2>
-  <!-- TODO: Create templates for the borads-->
   <a href="/boards/g">Technology</a>
+  <a href="/boards/pol">Politically Incorrect</a>
 </div>
-
 <br />
-
 <div id="other">
   <div id="stats"></div>
   <div id="total-size"></div>
