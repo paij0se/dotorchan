@@ -2,6 +2,7 @@ import { writable, derived } from "svelte/store";
 import { onMount } from "svelte";
 import url from "../services.json";
 import { checkWhatBoardIs } from "./post";
+
 const baseURL = url["dotorchan-api"];
 
 interface CommentFile {
@@ -40,8 +41,8 @@ export interface Post {
   };
 }
 /**
- * 
- * @param text 
+ *
+ * @param text
  * @returns text with line breaks
  * @description this function is used to convert text with line breaks to html
  */
@@ -51,7 +52,11 @@ export function safeTextWithLineBreaks(text: string): string {
   return (
     div.innerHTML
       .replace(/\n/g, "<br />") // space lines
-      .replace(/```(.*?)```/g, "<code>$1</code>") // code blocks
+      // code block
+      .replace(
+        /```(.*?)```/g,
+        `<pre style="background-color: #fff;"><code>$1</code></pre>`
+      )
       .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // bold
       .replace(/\*(.*?)\*/g, "<em>$1</em>") // italic
       .replace(/__(.*?)__/g, "<u>$1</u>") // underline

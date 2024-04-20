@@ -56,6 +56,7 @@
     {/if}
   {/if}
   <p>{@html safeTextWithLineBreaks(post.content)}</p>
+
   <!-- Comments ############################################################################ -->
   {#if post.comments}
     {#each post.comments as comment}

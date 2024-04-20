@@ -44,6 +44,10 @@ summary {
 span {
   color: #800;
 }
+textarea {
+  width: 250px;
+  height: 150px;
+}
 #post-btn {
   width: 128px;
   height: 32px;
