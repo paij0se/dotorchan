@@ -10,6 +10,7 @@ import (
 	_ "image/jpeg"
 	_ "image/png"
 	"io"
+	"log"
 	"math/rand"
 	"net/http"
 	"os"
@@ -17,6 +18,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/rekognition"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/gorilla/mux"
 	"github.com/paij0se/doctorchan/web/aws/captcha"
@@ -27,6 +29,9 @@ import (
 type File struct {
 	Name string `json:"name"`
 	Data string `json:"data"`
+}
+type RequestBody struct {
+	Image string
 }
 
 func getImageDimension(imagePath string) (int, int) {
@@ -103,43 +108,63 @@ func UploadtoS3(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(os.Stderr, "Error reading file:", err)
 		return
 	}
-	// 25MB is the maximum file size allowed
-	if buf.Len() > 26214400 {
+	rekognitionSvc := rekognition.New(sess)
+	input := &rekognition.DetectModerationLabelsInput{
+		Image: &rekognition.Image{
+			Bytes: buf.Bytes(),
+		},
+	}
+	result, err := rekognitionSvc.DetectModerationLabels(input)
+	if err != nil {
+		fmt.Println("Error detecting moderation labels:", err)
+		return
+	}
+	for _, label := range result.ModerationLabels {
+		fmt.Println("Label: ", *label.Name)
+		fmt.Println("Confidence: ", *label.Confidence)
+	}
+	if len(result.ModerationLabels) > 0 {
+		log.Println("Image contains explicit content")
+		os.Remove(IncomingFile.Name)
 		json.NewEncoder(w).Encode(map[string]string{
-			"error": "File size too large",
+			"error": "Image contains explicit content",
 		})
 	} else {
-		// This uploads the contents of the buffer to S3
-		_, err = svc.PutObject(&s3.PutObjectInput{
-			Bucket: aws.String(bucket),
-			Key:    aws.String(key),
-			Body:   bytes.NewReader(buf.Bytes()),
-		})
-		if err != nil {
-			fmt.Println("Error uploading file:", err)
-			return
+		if buf.Len() > 26214400 {
+			json.NewEncoder(w).Encode(map[string]string{
+				"error": "File size too large",
+			})
+		} else {
+			_, err = svc.PutObject(&s3.PutObjectInput{
+				Bucket: aws.String(bucket),
+				Key:    aws.String(key),
+				Body:   bytes.NewReader(buf.Bytes()),
+			})
+			if err != nil {
+				fmt.Println("Error uploading file:", err)
+				return
+			}
+
+			fmt.Println("File uploaded successfully!!!")
+			s3Url := "https://" + bucket + ".s3.amazonaws.com/" + key
+			fileSize := buf.Len()
+			fmt.Println(getImageDimension(IncomingFile.Name))
+			fmt.Println(s3Url)
+			width, height := getImageDimension(IncomingFile.Name)
+			json.NewEncoder(w).Encode(map[string]interface{}{
+				"url":        s3Url,
+				"size":       fileSize,
+				"filename":   IncomingFile.Name,
+				"format":     fileFormat,
+				"dimensions": map[string]int{"height": height, "width": width},
+			})
+			err = os.Remove(IncomingFile.Name)
+			if err != nil {
+				fmt.Println("Error deleting file from disk:", err)
+				return
+			}
 		}
 
-		fmt.Println("File uploaded successfully!!!")
-		// send the s3 link to the client
-		s3Url := "https://" + bucket + ".s3.amazonaws.com/" + key
-		fileSize := buf.Len()
-		fmt.Println(getImageDimension(IncomingFile.Name))
-		fmt.Println(s3Url)
-		width, height := getImageDimension(IncomingFile.Name)
-		json.NewEncoder(w).Encode(map[string]interface{}{
-			"url":        s3Url,
-			"size":       fileSize,
-			"filename":   IncomingFile.Name,
-			"format":     fileFormat,
-			"dimensions": map[string]int{"height": height, "width": width},
-		})
-		// delete the file from the disk
-		err = os.Remove(IncomingFile.Name)
-		if err != nil {
-			fmt.Println("Error deleting file from disk:", err)
-			return
-		}
 	}
 
 }
