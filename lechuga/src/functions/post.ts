@@ -40,6 +40,10 @@ export function putH1() {
       return "/mu/ - Music";
   }
 }
+/**
+  * change the title of the page to the title of the thread and show the thread
+ */
+
 export function PostReplyIdk() {
   if (browser) {
     const urlParams = new URLSearchParams(window.location.search);

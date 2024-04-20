@@ -39,16 +39,29 @@ export interface Post {
     size: number;
   };
 }
-export function safeTextWithLineBreaks(text: string) {
+/**
+ * 
+ * @param text 
+ * @returns text with line breaks
+ * @description this function is used to convert text with line breaks to html
+ */
+export function safeTextWithLineBreaks(text: string): string {
   const div = document.createElement("div");
   div.textContent = text;
-  return div.innerHTML
-    .replace(/\n/g, "<br />") // space lines
-    .replace(/```(.*?)```/g, "<code>$1</code>") // code blocks
-    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // bold
-    .replace(/\*(.*?)\*/g, "<em>$1</em>") // italic
-    .replace(/__(.*?)__/g, "<u>$1</u>") // underline
-    .replace(/~~(.*?)~~/g, "<del>$1</del>"); // strikethrough
+  return (
+    div.innerHTML
+      .replace(/\n/g, "<br />") // space lines
+      .replace(/```(.*?)```/g, "<code>$1</code>") // code blocks
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // bold
+      .replace(/\*(.*?)\*/g, "<em>$1</em>") // italic
+      .replace(/__(.*?)__/g, "<u>$1</u>") // underline
+      .replace(/~~(.*?)~~/g, "<del>$1</del>") // strikethrough
+      // spoiler tag
+      .replace(
+        /\|\|(.*?)\|\|/g,
+        `<span style="background-color: black; color: black;" onmouseover="this.style.color=''; this.style.backgroundColor='';" onmouseout="this.style.color='black'; this.style.backgroundColor='black';" >$1</span>`
+      )
+  );
 }
 export const apiData = writable([]);
 

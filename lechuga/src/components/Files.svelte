@@ -58,7 +58,7 @@
   <p>{@html safeTextWithLineBreaks(post.content)}</p>
   <!-- Comments ############################################################################ -->
   {#if post.comments}
-    {#each post.comments.slice(0, 10) as comment}
+    {#each post.comments as comment}
       <p id="separator">>></p>
       <div class="comment">
         <span>
