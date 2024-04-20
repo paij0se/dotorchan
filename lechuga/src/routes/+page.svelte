@@ -48,6 +48,7 @@
 <div id="boards">
   <h2>Boards</h2>
   <a href="/boards/g">Technology</a>
+  <a href="/boards/mu">Music</a>
   <a href="/boards/pol">Politically Incorrect</a>
 </div>
 <br />

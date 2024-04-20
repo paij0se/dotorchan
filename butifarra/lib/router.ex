@@ -52,23 +52,6 @@ defmodule Dotorchan.Router do
   end
 
   #########################################################
-  post "/api/v1/qst" do
-    Routes.Boards.post(conn, "qst")
-  end
-
-  post "/api/v1/qst/:id" do
-    Routes.Boards.post_comment_thread(conn, "qst")
-  end
-
-  get "/api/v1/qst" do
-    Routes.Boards.get_publications(conn, "qst")
-  end
-
-  get "/api/v1/qst/:id" do
-    Routes.Boards.get_publication(conn, "qst")
-  end
-
-  #########################################################
   post "/api/v1/mu" do
     Routes.Boards.post(conn, "mu")
   end

@@ -14,10 +14,10 @@ export function checkWhatBoardIs(): string {
   ) {
     board = "g";
   } else if (
-    window.location.pathname === "/boards/a" ||
-    window.location.pathname === "/boards/a/thread"
+    window.location.pathname === "/boards/mu" ||
+    window.location.pathname === "/boards/mu/thread"
   ) {
-    board = "a";
+    board = "mu";
   } else if (
     window.location.pathname === "/boards/pol" ||
     window.location.pathname === "/boards/pol/thread"
@@ -35,9 +35,9 @@ export function putH1() {
     case "pol":
       document.title = "/pol/ - Politically Incorrect";
       return "/pol/ - Politically Incorrect";
-    case "a":
-      document.title = "/a/ - Anime & Manga";
-      return "/a/ - Anime & Manga";
+    case "mu":
+      document.title = "/mu/ - Music";
+      return "/mu/ - Music";
   }
 }
 export function PostReplyIdk() {

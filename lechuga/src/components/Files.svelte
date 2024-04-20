@@ -56,7 +56,6 @@
     {/if}
   {/if}
   <p>{@html safeTextWithLineBreaks(post.content)}</p>
-  <hr />
   <!-- Comments ############################################################################ -->
   {#if post.comments}
     {#each post.comments.slice(0, 10) as comment}
