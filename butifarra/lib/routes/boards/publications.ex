@@ -71,21 +71,15 @@ defmodule Routes.Boards do
             # unique id, life 4chan XD
             # $now.=" ID:".substr(crypt(md5($_SERVER["REMOTE_ADDR"].'id'.date("Ymd", $time)),'id'),+3);
             # user_id (ip) + (datetime) + (random number) + (random number)
+
             post_id =
               String.slice(Tools.Encrypt.e(Integer.to_string(System.monotonic_time())), 0, 4) <>
-                String.slice(
-                  Integer.to_string(Enum.random(1..100_000_000_000)),
-                  0,
-                  4
-                ) <>
-                String.slice(
-                  Integer.to_string(Enum.random(1..100_000_000_000)),
-                  0,
-                  4
-                )
+                Integer.to_string(Enum.random(1..100_000_000_000))
 
-            user_id = String.slice(Tools.Encrypt.e(Tools.Ip.get(conn)), 0, 12)
+            salt = Integer.to_string(System.monotonic_time())
+            user_id = String.slice(Tools.Encrypt.e(Tools.Ip.get(conn) <> salt), 0, 12)
             IO.inspect(file, label: "file")
+            score = 0
 
             response = %{
               "user_id" => user_id,
@@ -103,7 +97,8 @@ defmodule Routes.Boards do
               "content" => content,
               "ip" => ip,
               "created_at" => DateTime.utc_now() |> DateTime.to_iso8601(),
-              "file" => file
+              "file" => file,
+              "score" => score
             }
 
             Mongo.insert_one(c, board, for_the_database) |> IO.inspect(label: "insert")
@@ -123,7 +118,7 @@ defmodule Routes.Boards do
 
   def get_publications(conn, board) do
     c = Db.Connect.connect()
-
+    # sort by score
     response =
       Mongo.aggregate(c, board, [
         %{
@@ -134,11 +129,13 @@ defmodule Routes.Boards do
         %{
           "$project" => %{
             "_id" => 0,
-            "ip" => 0
+            "ip" => 0,
+            "comments.ip" => 0
           }
         }
       ])
       |> Enum.to_list()
+      |> Enum.sort(&(Map.get(&1, "score") > Map.get(&2, "score")))
       |> Jason.encode!()
 
     send_resp(conn |> put_resp_content_type("application/json"), 200, response)
@@ -222,18 +219,10 @@ defmodule Routes.Boards do
           # user_id (ip) + (datetime) + (random number) + (random number)
           comment_id =
             String.slice(Tools.Encrypt.e(Integer.to_string(System.monotonic_time())), 0, 4) <>
-              String.slice(
-                Integer.to_string(Enum.random(1..100_000_000_000)),
-                0,
-                4
-              ) <>
-              String.slice(
-                Integer.to_string(Enum.random(1..100_000_000_000)),
-                0,
-                4
-              )
+              Integer.to_string(Enum.random(1..100_000_000_000))
 
-          user_id = String.slice(Tools.Encrypt.e(Tools.Ip.get(conn)), 0, 12)
+          salt = Integer.to_string(System.monotonic_time())
+          user_id = String.slice(Tools.Encrypt.e(Tools.Ip.get(conn) <> salt), 0, 12)
 
           response = %{
             "user_id" => user_id,
@@ -252,20 +241,22 @@ defmodule Routes.Boards do
             "file" => file
           }
 
+          # increment the score of the post +1
           {:ok, %Mongo.UpdateResult{matched_count: matched_count}} =
             Mongo.update_one(
               c,
               board,
-              %{
-                "post_id" => post_id
-              },
+              %{"post_id" => post_id},
               %{
                 "$push" => %{
                   "comments" => for_the_database
+                },
+                "$inc" => %{
+                  "score" => 1
                 }
               }
             )
-            |> IO.inspect(label: "insert")
+            |> IO.inspect(label: "update")
 
           if matched_count == 0 do
             send_resp(
