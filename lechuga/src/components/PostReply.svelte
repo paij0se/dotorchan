@@ -36,6 +36,10 @@
             }),
           });
           const s3Url: PostToS3 = await res.json();
+          if (s3Url.error) {
+            alert(s3Url.error);
+            window.location.reload();
+          }
           fileS3 = s3Url;
           if (browser) {
             document.getElementById("fileName")!.innerText = files[0].name;

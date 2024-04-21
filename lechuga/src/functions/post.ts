@@ -65,6 +65,7 @@ export function PostReplyIdk() {
   }
 }
 export interface PostToS3 {
+  error : string;
   filename: string;
   format: string;
   size: number;

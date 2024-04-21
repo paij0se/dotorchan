@@ -126,6 +126,7 @@ func UploadtoS3(w http.ResponseWriter, r *http.Request) {
 	if len(result.ModerationLabels) > 0 {
 		log.Println("Image contains explicit content")
 		os.Remove(IncomingFile.Name)
+		w.WriteHeader(http.StatusForbidden)
 		json.NewEncoder(w).Encode(map[string]string{
 			"error": "Image contains explicit content",
 		})
