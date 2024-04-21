@@ -131,7 +131,8 @@ func UploadtoS3(w http.ResponseWriter, r *http.Request) {
 			"error": "Image contains explicit content",
 		})
 	} else {
-		if buf.Len() > 26214400 {
+		// 4MB
+		if buf.Len() > 4194304 {
 			json.NewEncoder(w).Encode(map[string]string{
 				"error": "File size too large",
 			})

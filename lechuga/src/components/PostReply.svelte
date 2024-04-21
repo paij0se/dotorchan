@@ -21,8 +21,9 @@
         if (typeof e.target.result === "string") {
           const imgData = e.target.result.split(",");
           const data = { image: imgData[1] };
-          if (imgData[1].length > 26214400) {
-            alert("File is too large, max size is 25MB");
+          // max size is 4MB
+          if (imgData[1].length > 4194304) {
+            alert("File is too large, max size is 4MB");
             return;
           }
           const res = await fetch(s3URL, {
